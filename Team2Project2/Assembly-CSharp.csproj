@@ -40,6 +40,7 @@
      <Compile Include="Assets/02.Scripts/수술실trigger.cs" />
      <Compile Include="Assets/LockControl6784.cs" />
      <Compile Include="Assets/Soja Exiles/SE Basic Assets/Scripts and Animations/First Person Player/PlayerMovement.cs" />
+     <Compile Include="Assets/02.Scripts/TestScript.cs" />
      <Compile Include="Assets/02.Scripts/SlotToolTip.cs" />
      <Compile Include="Assets/02.Scripts/ItemEffectDatabase.cs" />
      <Compile Include="Assets/Soja Exiles/Doctors Office/Scenes/SceneSwitch.cs" />
@@ -105,7 +106,6 @@
      <Compile Include="Assets/02.Scripts/GameMenu3.cs" />
      <Compile Include="Assets/Soja Exiles/SE Basic Assets/Scripts and Animations/Doors/opencloseDoor5395.cs" />
      <Compile Include="Assets/06.Sounds/_Flashlight PRO/_Assets/scripts/Flashlight_PRO.cs" />
-     <Compile Include="Assets/02.Scripts/TestScript.cs" />
      <None Include="Assets/04.Images/test.txt" />
      <None Include="Assets/Clipboard/ReadMe/ReadMe.txt" />
      <None Include="Assets/05.Models/test.txt" />
@@ -365,6 +365,9 @@
     <Reference Include="UnityEditor.UnityConnectModule">
         <HintPath>/Applications/Unity/Hub/Editor/2021.3.20f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.analytics@3.6.12/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -373,9 +376,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.analytics@3.6.12/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
         <HintPath>/Applications/Unity/Hub/Editor/2021.3.20f1/Unity.app/Contents/NetStandard/ref/2.1.0/netstandard.dll</HintPath>
@@ -794,14 +794,17 @@
     <Reference Include="Unity.ProGrids.Editor">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+    <Reference Include="Unity.Mediation">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Mediation.dll</HintPath>
+    </Reference>
+    <Reference Include="Analytics">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Analytics">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Analytics.dll</HintPath>
+    <Reference Include="UnityEngine.UI">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Core">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Services.Core.dll</HintPath>
@@ -844,9 +847,6 @@
     </Reference>
     <Reference Include="Unity.ProGrids">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Mediation">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Mediation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

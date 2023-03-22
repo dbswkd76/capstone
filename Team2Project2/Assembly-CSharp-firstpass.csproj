@@ -150,8 +150,8 @@
      <Compile Include="Assets/Standard Assets/CrossPlatformInput/Scripts/InputAxisScrollbar.cs" />
      <Compile Include="Assets/Standard Assets/Utility/EventSystemChecker.cs" />
      <Compile Include="Assets/Standard Assets/CrossPlatformInput/Scripts/PlatformSpecific/MobileInput.cs" />
-     <Compile Include="Assets/Standard Assets/Utility/ActivateTrigger.cs" />
      <Compile Include="Assets/Standard Assets/Effects/ImageEffects/Scripts/TiltShift.cs" />
+     <Compile Include="Assets/Standard Assets/Utility/ActivateTrigger.cs" />
      <Compile Include="Assets/Standard Assets/Environment/Water/Water/Scripts/Water.cs" />
      <Compile Include="Assets/Standard Assets/Effects/ImageEffects/Scripts/Fisheye.cs" />
      <Compile Include="Assets/Standard Assets/Characters/ThirdPersonCharacter/Scripts/ThirdPersonCharacter.cs" />
@@ -508,6 +508,9 @@
     <Reference Include="UnityEditor.UnityConnectModule">
         <HintPath>/Applications/Unity/Hub/Editor/2021.3.20f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.analytics@3.6.12/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -516,9 +519,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.analytics@3.6.12/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
         <HintPath>/Applications/Unity/Hub/Editor/2021.3.20f1/Unity.app/Contents/NetStandard/ref/2.1.0/netstandard.dll</HintPath>
@@ -922,9 +922,6 @@
     <Reference Include="Unity.2D.Sprite.Editor">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
@@ -940,14 +937,17 @@
     <Reference Include="Unity.ProGrids.Editor">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+    <Reference Include="Unity.Mediation">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Mediation.dll</HintPath>
+    </Reference>
+    <Reference Include="Analytics">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Analytics">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Analytics.dll</HintPath>
+    <Reference Include="UnityEngine.UI">
+        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Core">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.Services.Core.dll</HintPath>
@@ -990,9 +990,6 @@
     </Reference>
     <Reference Include="Unity.ProGrids">
         <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Advertisements.Editor">
-        <HintPath>/Users/dimblessing/Documents/Development/capstone/Team2Project2/Library/ScriptAssemblies/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
