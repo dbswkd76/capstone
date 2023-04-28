@@ -18,7 +18,7 @@ public class TurnOnOffSonJeonDeung : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             flashlight.Switch();
-            Debug.Log("Son Jeon Deung");
+            Debug.Log("FlashLight");
         }
     }
 }
