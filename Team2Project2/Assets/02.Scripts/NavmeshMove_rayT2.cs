@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor;
 
-public class NavMeshMove_rayTest : MonoBehaviour
+public class NavmeshMove_rayT2 : MonoBehaviour
 {
     private enum State
     {
@@ -57,7 +57,7 @@ public class NavMeshMove_rayTest : MonoBehaviour
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         //attackDistance = Vector3.Distance(transform.position, new Vector3(attackRoot.position.x , transform.position.y, attackRoot.position.z)) + attackRange;
         //attackDistance += nav.radius;
-
+        target = GameObject.FindWithTag("Player");
         nav.stoppingDistance = attackDistance;  //플레이어 접근 후 공격을 위한 정지
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도/
     }
@@ -71,7 +71,7 @@ public class NavMeshMove_rayTest : MonoBehaviour
             BeginAttack();
         }
         Debug.Log(state);
-        //Debug.Log("To target: " + nav.remainingDistance + ", " + nav.pathStatus);
+        //Debug.Log("To target: " + nav.remainingDistance);
     }
     private void BeginAttack(){
         state = State.AttackBegin;
@@ -99,85 +99,42 @@ public class NavMeshMove_rayTest : MonoBehaviour
     {
         while (true)
         {
-            /*if (hasTarget)  //플레이어 감지 시
-            {
-                if (state == State.Patrol)  //NPC 상태 업데이트
-                {
+            var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
+            Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
+            if((nav.destination != target.transform.position) && nav.remainingDistance <= 2f){ //감지된 콜라이더 없고 목적지까지 거리가 2이하
+              //target = null;
+              patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
+              if(state != State.Patrol){
+                state = State.Patrol;
+                nav.speed = patrolSpeed;
+              }
+              Debug.Log("random point update!");
+              targetPoint = patrolPosition;
+              nav.SetDestination(patrolPosition);
+              //break;
+            }
+            else if(colliders.Length != 0){
+              foreach(var collider in colliders){
+                if(!IsTargetOnSight(collider.transform.position)){
+                  Debug.Log("cannot see!");
+                  continue;
+                }
+                if(collider.tag == "Player"){
+                  Debug.Log("targeting!");
+                  target = collider.gameObject;
+
+                  if(state == State.Patrol){
                     state = State.Tracking;
                     nav.speed = runSpeed;
+                  }
+                  nav.SetDestination(target.transform.position);
+                  break;
                 }
-
-                // 플레이어 추적
-                nav.SetDestination(target.transform.position);
-            } */  
-            //else    //플레이어 감지 안될 시
-            //{   
-                //NPC 상태 업데이트
-                /*if (target != null){
-                    target = null;
-                }
-                if (state != State.Patrol)
-                {
-                    state = State.Patrol;
-                    nav.speed = patrolSpeed;
-                }*/
-
-                if (nav.remainingDistance <= 2f)    //타겟까지의 거리 2 이하일 때 타겟포인트 갱신
-                {
-                    var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-                    /*while(nav.transform.position.y - patrolPosition.y >= 3){    //y좌표가 3 이상 차이가 안 날때까지
-                        patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-                        if(!IsTargetOnSight(patrolPosition)){   //갱신한 타겟이 ray에 안 보이면 다시 갱신
-                            Debug.Log("not access target! " + patrolPosition);
-                            Debug.Log(nav.transform.position.y - patrolPosition.y);
-                            continue;
-                        }
-                        
-                    }*/
-                    /*while(nav.remainingDistance < 5f){   //랜덤포인트까지의 거리가 5보다 작으면 true => 5보다 커질때까지 반복
-                        patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-                    }*/
-                    Debug.Log("good point: " + patrolPosition + ", distance: " + nav.remainingDistance);
-                    targetPoint = patrolPosition;   //타겟포인트 비주얼 테스트용
-                    if(state != State.Patrol){  //NPC 상태 업데이트
-                        state = State.Patrol;
-                        nav.speed = patrolSpeed;
-                    }
-                    nav.SetDestination(patrolPosition);
-                    
-                }
-                // 20 유닛의 반지름을 가진 가상의 구를 그렸을때, 구와 겹치는 모든 콜라이더를 가져옴
-                Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
-                Debug.Log("target count: " + colliders.Length);
-
-                // 모든 콜라이더들을 순회하면서, 살아있는 LivingEntity 찾기
-                foreach (var collider in colliders)
-                {
-                    if(Vector3.Distance(eyeTransform.position, collider.transform.position) < attackRange){
-
-                    }
-                    if (!IsTargetOnSight(collider.transform.position)){
-                        Debug.Log("player not seeing");
-                        continue;
-                    }
-
-                    if(collider.tag == "Player"){
-                        Debug.Log("targeting!");
-                        target = collider.gameObject;
-
-                        if (state == State.Patrol)  //NPC 상태 업데이트
-                        {
-                            state = State.Tracking;
-                            nav.speed = runSpeed;
-                        }
-                        nav.SetDestination(target.transform.position);
-                        break;
-                    }
-                }
-            //}
-
+              }
+            }
             // 0.05 초 시간 간격을 두면서 살아 있는 동안 무한 루프 반복 처리
             yield return new WaitForSeconds(0.05f);
+
         }
     }
 
