@@ -8,7 +8,7 @@ public class opencloseDoor3211 : MonoBehaviour
 	public Animator openandclose1;
 	public bool open;
 	public Transform Player;
-	public LockControl0427 _lock;
+	public LockControl0100 _lock;
 	public AudioSource audio;
 	public AudioClip _openSound;
 	public AudioClip _closeSound;
