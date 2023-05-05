@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     // Now Player Speed
-    private float applySpeed;
+    public float applySpeed { get; set; }
 
     // Speed
     [SerializeField]
@@ -81,7 +81,6 @@ public class PlayerControl : MonoBehaviour
         }
     }
    
-
     private void TryCrouch()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -220,7 +219,5 @@ public class PlayerControl : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-
-
     }
 }

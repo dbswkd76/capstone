@@ -18,7 +18,6 @@ public class Drawer_Pull_Z: MonoBehaviour {
 			if (Player) {
 				float dist = Vector3.Distance (Player.position, transform.position);
 				if (dist < 3) {
-                    print("object name");
 					if (open == false) {
 						if (Input.GetMouseButtonDown (0)) {
 							StartCoroutine (opening ());
