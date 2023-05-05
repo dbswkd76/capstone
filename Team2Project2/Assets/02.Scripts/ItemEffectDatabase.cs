@@ -9,6 +9,7 @@ public class ItemEffect
     [Tooltip("HP, POISON 만 가능합니다")]
     public string[] part; // 부위.
     public int[] num; // 수치.
+    //public float[] num;
 }
 
 public class ItemEffectDatabase : MonoBehaviour
@@ -54,11 +55,12 @@ public class ItemEffectDatabase : MonoBehaviour
                         switch (itemEffects[x].part[y])
                         {
                             case HP:
-                                thePlayerStatus.IncreaseHP(itemEffects[x].num[y]);
+                                //thePlayerStatus.IncreaseHP(itemEffects[x].num[y]);
+                                thePlayerStatus.healingHealth(itemEffects[x].num[y]);
                                 break;
-                            case POISON:
+                            /*case POISON:
                                 thePlayerStatus.DecreasePOISON(itemEffects[x].num[y]);
-                                break;
+                                break;*/
 
 
                             default:
