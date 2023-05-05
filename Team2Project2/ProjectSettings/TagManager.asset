@@ -8,6 +8,8 @@ TagManager:
   - Tool
   - item
   - Item
+  - MovingWall
+  - FixedWall
   layers:
   - Default
   - TransparentFX
