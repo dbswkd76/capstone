@@ -33,7 +33,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
 
     private int attackPower = 10;
     private float attackRange = 2f; //플레이어 공격 반경
-    private float attackDistance = 0.5f;
+    private float attackDistance = 1f;
 
     private RaycastHit[] hits = new RaycastHit[10]; //Ray 범위
     private List<StatusController> lastTargets = new List<StatusController>();
@@ -51,7 +51,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
             Gizmos.DrawSphere(attackRoot.position, attackRange);
             Gizmos.DrawSphere(targetPoint, 0.5f);
         }
-        Debug.DrawRay(transform.position, transform.forward * 8, Color.red);
+        Debug.DrawRay(transform.position, transform.forward * viewDistance, Color.red);
 
         var leftRayRotation = Quaternion.AngleAxis(-fov * 0.5f, Vector3.up);
         var leftRayDirection = leftRayRotation * transform.forward;
@@ -64,10 +64,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
 
     void Awake(){
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
-        //attackDistance = Vector3.Distance(transform.position, new Vector3(attackRoot.position.x , transform.position.y, attackRoot.position.z)) + attackRange;
-        attackDistance += nav.radius; //stoppingdistance때문에 멋대로 멈춤?
-        //target = GameObject.FindWithTag("Player");
-        //nav.stoppingDistance = attackDistance;  //플레이어 접근 후 공격을 위한 정지
+        attackDistance += nav.radius;
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }
     public void Setup(int attackPower, float runSpeed, float patrolSpeed){    //NPC 스펙 셋업
@@ -87,27 +84,39 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     }
     void Update()
     {
-        if(target == null || target.dead) return;    //타겟 dead
-        if(state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){
+        /*if(target == null || target.dead){
+            Debug.Log(state);
+            //return;    //타겟 dead
+        }*/
+        /*if(!hasTarget || target.dead){
+            Debug.Log("no!");
+            return;
+        }*/
+        //Debug.Log(Vector3.Distance(target.transform.position, transform.position) + ", " + timer);
+        if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
             Debug.Log("ready to attack!");
             BeginAttack();
         }
         Debug.Log(state);
-        Debug.Log(target.health);
+        //Debug.Log(target.health);
+        Debug.Log(hasTarget);
         //Debug.Log("target? " + hasTarget);
         //Debug.Log("To target: " + nav.remainingDistance);
 
-        //공격 기능 실행 지연값 업데이트
-        timer += Time.deltaTime;
     }
     private void FixedUpdate(){
-        if(target == null || target.dead){  //target null 임시 해결
-            Debug.Log("return");
+        /*if(target == null || target.dead){  //target null 임시 해결
+            Debug.Log("return " + hasTarget);
             state = State.Patrol;
             nav.isStopped = false;
+            //return;
+        }*/
+        /*if(!hasTarget || target.dead){
+            Debug.Log("no!");
             return;
-        }
-        if(state == State.AttackBegin || state == State.Attacking){ //상태가 공격 관련 상태일 때
+        }*/
+        if(hasTarget && state == State.AttackBegin || state == State.Attacking){ //상태가 공격 관련 상태일 때
+            Debug.Log("fixed attack");
             var lookRotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var targetAngleY = lookRotation.eulerAngles.y;
 
@@ -116,11 +125,26 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
             //Attack();
             //Debug.Log(timer);
             //공격 주기나 공격 정지 후 NPC 타겟팅 해제를 위한 코드 작성 필요(2023.05.01 오후 11:31)
+            //Navmesh 내에서 플레이어와 일정 거리 이상 떨어진 랜덤 포인트로 텔레포트 후 NPC 리셋?
             if(timer < delayTime){
                 Attack();
+                timer += Time.deltaTime;    //공격 직후부터 계산한 시간을 기준으로 타이머를 설정
             }
             else if(timer > delayTime){
                 EndAttack();
+                //transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, -targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+                while(true){
+                    Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, NavMesh.AllAreas);
+                    //Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos));
+                    if(Vector3.Distance(transform.position, teleportPos) > 15f){
+                        Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos) + ", pos: " + teleportPos);
+                        transform.position = teleportPos;
+                        //target = null;
+                        break;
+                    }
+                }
+           
+                //target = null;
             }
             //EndAttack 메소드가 실행이 되야 NPC 동작 리셋 가능
             //EndAttack();
@@ -155,7 +179,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     }
     private bool hasTarget{ //읽기 전용
         get{
-            if(target != null && !target.dead){   //&& !target.dead
+            if(target != null && !target.dead){ //타겟이 없지 않고 타겟이 죽지 않았으면
                 return true;
             }
             return false;
@@ -163,15 +187,22 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     }
     private IEnumerator UpdatePath()
     {
+        //nav.enabled = true;
         while (true)
         {   
+            Debug.Log("코루틴 동작중 : target? " + hasTarget);
             if(hasTarget){
+                Debug.Log("코루틴 1st");
                 nav.SetDestination(target.transform.position);
+                break;
             }
             var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
+            //nav.SetDestination(patrolPosition);
             Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
+            Debug.Log("colider length: " + colliders.Length);
             if(!hasTarget && colliders.Length == 0){  //범위 내 감지된 콜라이더 없을 때
-                target = null;
+                Debug.Log("코루틴 2nd");
+                //target = null;
                 if(state != State.Patrol){
                     state = State.Patrol;
                     nav.speed = patrolSpeed;
@@ -185,7 +216,10 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
 
             }
             else{   //감지된 콜라이더 있을 때
+                Debug.Log("코루틴 3rd");
                 foreach(var collider in colliders){
+                    Debug.Log("name: " + collider.name);
+                    Debug.Log("see: " + IsTargetOnSight(collider.transform.position));
                     if(!IsTargetOnSight(collider.transform.position)){  //ray 안보이면 랜덤포인트로 설정
                         Debug.Log("nearby but cannot see player!");
                         /*nav.SetDestination(patrolPosition);
@@ -195,7 +229,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                             nav.SetDestination(patrolPosition);
                         }
                         */
-                        target = null;
+                        //target = null;
                         if(state != State.Patrol){
                             state = State.Patrol;
                         }
@@ -221,6 +255,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                 //nav.SetDestination(target.transform.position);
             }
             yield return new WaitForSeconds(0.05f);
+            //yield return new WaitForFixedUpdate ();
         }
     }
 
@@ -280,13 +315,20 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     private void EndAttack(){
         Debug.Log("call EndAttack");
         timer = 0f;
+        target = null;
         if(hasTarget){
             state = State.Tracking;
+            Debug.Log("End target yes");
         }
         else{
             state = State.Patrol;
+            Debug.Log("End no target");
         }
         nav.isStopped = false;
+        Debug.Log("endattack state:" + state);
+        //nav.enabled = false;
+        //Debug.Log("endattack state:" + state);
+        //state = State.Patrol;
     }
 
 }
