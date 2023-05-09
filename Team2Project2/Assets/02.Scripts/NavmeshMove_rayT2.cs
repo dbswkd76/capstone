@@ -104,8 +104,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         }
         Debug.Log(state);
         //Debug.Log(target.health);
-        Debug.Log(hasTarget);
-        //Debug.Log("target? " + hasTarget);
+        Debug.Log(hasTarget + ", " + nav.destination);
+        Debug.Log(nav.hasPath);
         //Debug.Log("To target: " + nav.remainingDistance);
 
     }
@@ -209,7 +209,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                     state = State.Patrol;
                     nav.speed = patrolSpeed;
                 }
-                if(nav.remainingDistance <= 2f){    //타겟 포인트까지 거리가 2 이하일때 업데이트
+                if(nav.remainingDistance <= 2f || nav.hasPath == false){    //타겟 포인트까지 거리가 2 이하일때 or 포인트까지 경로가 없을 때 업데이트
                     patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
                     Debug.Log("random point update!");
                     targetPoint = patrolPosition;       
