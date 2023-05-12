@@ -27,6 +27,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     private float viewDistance = 5f;   //NPC 시야범위
     private float patrolSpeed = 1.5f; //추적 안할 시 이동 속도
     private float runSpeed = 2f;    //추적 시 이동 속도
+    private float navFloor = 12f;  //3층 floor : 11.04
+
     //NPC 회전딜레이
     private float turnSmoothVelocity;
     [Range(0.01f, 2f)] public float turnSmoothTime = 0.1f;
@@ -67,11 +69,12 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         attackDistance += nav.radius;
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }
-    public void Setup(int attackPower, float runSpeed, float patrolSpeed){    //NPC 스펙 셋업
+    public void Setup(int attackPower, float runSpeed, float patrolSpeed, float navFloor){    //NPC 스펙 셋업
         this.runSpeed = runSpeed;
         this.patrolSpeed = patrolSpeed;
         this.attackPower = attackPower;
         nav.speed = patrolSpeed;
+        this.navFloor = navFloor;
     }
     /*void Start()
     {
@@ -105,7 +108,10 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         Debug.Log(state);
         //Debug.Log(target.health);
         Debug.Log(hasTarget + ", " + nav.destination);
-        Debug.Log(nav.hasPath);
+        Debug.Log("path " + nav.hasPath + ", To: " + nav.destination);
+        if(!nav.hasPath){
+            StartCoroutine(UpdatePath());
+        }
         //Debug.Log("To target: " + nav.remainingDistance);
 
     }
@@ -137,18 +143,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
             }
             else if(timer > delayTime){
                 EndAttack();
-                //transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, -targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-                /*while(true){
-                    Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, NavMesh.AllAreas);
-                    //Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos));
-                    if(Vector3.Distance(transform.position, teleportPos) > 15f){
-                        Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos) + ", pos: " + teleportPos);
-                        transform.position = teleportPos;
-                        //target = null;
-                        break;
-                    }
-                }*/
-                //target = null;
             }
             //EndAttack 메소드가 실행이 되야 NPC 동작 리셋 가능
             //EndAttack();
@@ -186,6 +180,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
             if(target != null && !target.dead){ //타겟이 없지 않고 타겟이 죽지 않았으면
                 return true;
             }
+            
             return false;
         }
     }
@@ -194,81 +189,99 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         while (true)
         {   
             Debug.Log("코루틴 동작중 : target? " + hasTarget);
-            if(hasTarget){
+            if(hasTarget && !IsTargetOnSight(target.transform.position)){    //타겟이 레이에 없으면
+                target = null;
+            }
+            if(hasTarget){  //타겟 존재
                 Debug.Log("코루틴 1st");
+                if(state != State.Tracking){
+                    state = State.Tracking;
+                    nav.speed = runSpeed;
+                }
                 nav.SetDestination(target.transform.position);
                 break;
             }
-            var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-            Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
-            Debug.Log("colider length: " + colliders.Length);
-            if(!hasTarget && colliders.Length == 0){  //범위 내 감지된 콜라이더 없을 때
-                Debug.Log("코루틴 2nd");
-                //target = null;
+            else{
                 if(state != State.Patrol){
                     state = State.Patrol;
                     nav.speed = patrolSpeed;
                 }
-                if(nav.remainingDistance <= 2f || nav.hasPath == false){    //타겟 포인트까지 거리가 2 이하일때 or 포인트까지 경로가 없을 때 업데이트
-                    patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-                    Debug.Log("random point update!");
-                    targetPoint = patrolPosition;       
-                    nav.SetDestination(patrolPosition);
-                }
-
-            }
-            else{   //감지된 콜라이더 있을 때
-                Debug.Log("코루틴 3rd");
-                foreach(var collider in colliders){
-                    Debug.Log("name: " + collider.name);
-                    Debug.Log("see: " + IsTargetOnSight(collider.transform.position));
-                    if(!IsTargetOnSight(collider.transform.position)){  //ray 안보이면 랜덤포인트로 설정
-                        Debug.Log("nearby but cannot see player!");
-                        /*nav.SetDestination(patrolPosition);
-                        if(nav.remainingDistance <= 2f){
-                            patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, NavMesh.AllAreas);
-                            targetPoint = patrolPosition;
-                            nav.SetDestination(patrolPosition);
-                        }
-                        */
-                        //target = null;
-                        if(state != State.Patrol){
-                            state = State.Patrol;
-                        }
-                        continue;
+                //var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);
+                Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
+                //Debug.Log("colider length: " + colliders.Length);
+                if(colliders.Length == 0){  //인식된 콜라이더 없을 때
+                    Debug.Log("코루틴 2nd 콜라이더0");
+                    //nav.SetDestination(patrolPosition);
+                    if(nav.remainingDistance <= 2f || nav.hasPath == false){    //목표지점까지의 거리, 네비게이션 경로 조건
+                        Debug.Log("random point update!");
+                        var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
+                        targetPoint = patrolPosition;       
+                        nav.SetDestination(patrolPosition); //목표 재설정
                     }
-                    if(collider.tag == "Player"){
-                        Debug.Log("targeting!");
-                        var targetPlayer = collider.GetComponent<StatusController>();
-                        if(state == State.Patrol){
-                            state = State.Tracking;
-                            nav.speed = runSpeed;
+                    //nav.SetDestination(patrolPosition); //목표 재설정
+                    //break;
+                }
+                else{
+                    foreach(var colider in colliders){
+                        if(!IsTargetOnSight(colider.transform.position)){   //콜라이더 인식되지만 레이에 안보일 때
+                            //nav.SetDestination(patrolPosition); //목표지점 설정
+                            Debug.Log("코루틴 2nd 콜라이더1");
+                            if(nav.remainingDistance <= 2f || nav.hasPath == false){    //목표지점까지의 거리, 네비게이션 경로 조건
+                                Debug.Log("random point update!");
+                                var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
+                                targetPoint = patrolPosition;       
+                                nav.SetDestination(patrolPosition); //목표 재설정
+                            }
+                            continue;   //패스
                         }
+                        //콜라이더 인식, ray 보일 때
+                        var targetPlayer = colider.GetComponent<StatusController>();
                         if(targetPlayer != null && !targetPlayer.dead){
                             target = targetPlayer;
+                            Debug.Log("코루틴 3rd");
                             break;
                         }
                     }
-                    else{
-                        nav.SetDestination(patrolPosition);
-                        break;
-                    }
                 }
-                //nav.SetDestination(target.transform.position);
+
             }
             yield return new WaitForSeconds(0.05f);
-            //yield return new WaitForFixedUpdate ();
         }
     }
 
-    public static Vector3 GetRandomPointOnNavMesh(Vector3 center, float distance, int areaMask)  // 인수 => 중심 위치, 반경 거리, 검색할 Area (내부적으로 int)
+    public static Vector3 GetRandomPointOnNavMesh(Vector3 center, float distance, float floor, int areaMask)  // 인수 => 중심 위치, 반경 거리, 검색할 Area (내부적으로 int)
     {
         var randomPos = Random.insideUnitSphere * distance + center;  // center를 중점으로 하여 반지름(반경) distance 내에 랜덤한 위치 리턴. *Random.insideUnitSphere*은 반지름 1 짜리의 구 내에서 랜덤한 위치를 리턴해주는 프로퍼티
-        
-        NavMeshHit hit;  // NavMesh 샘플링의 결과를 담을 컨테이너
-        
-        NavMesh.SamplePosition(randomPos, out hit, distance, areaMask);  // areaMask에 해당하는 NavMesh 중에서 randomPos로부터 distance 반경 내에서 randomPos에 *가장 가까운* 위치를 하나 찾아서 그 결과를 hit에 담음. 
-        
+        NavMeshHit hit;  // NavMesh 샘플링의 결과를 담을 컨테이너 
+        while(true){    //y좌표 기준으로 층 구분
+            NavMesh.SamplePosition(randomPos, out hit, distance, areaMask);
+            //3층 해당 좌표: > 11.02
+            //2층 해당 좌표: < 11, > 6
+            //1층 해당 좌표: < 6
+            //navFloor 변수 값 기준으로 sampleposition y값이
+            if(floor >= 11){    //3층 NPC일 때
+                if(hit.position.y >= 11){    //랜덤값 y좌표가 3층이면
+                    Debug.Log("3rd floor");
+                    break;
+                    //return hit.position;
+                }
+            }
+            else if(floor < 11 && floor >= 6){  //2층 NPC
+                if(hit.position.y < 11 && hit.position.y >= 6){
+                    Debug.Log("2nd floor");
+                    break;
+                    //return hit.position;
+                }
+            }
+            else{
+                if(hit.position.y < 6){
+                    Debug.Log("1st floor");
+                    break;
+                    //return hit.position;
+                }
+            }
+        }
+        //NavMesh.SamplePosition(randomPos, out hit, distance, areaMask);  // areaMask에 해당하는 NavMesh 중에서 randomPos로부터 distance 반경 내에서 randomPos에 *가장 가까운* 위치를 하나 찾아서 그 결과를 hit에 담음. 
         return hit.position;  // 샘플링 결과 위치인 hit.position 리턴
     }
     public static float GetRandomNormalDistribution(float mean, float standard)
@@ -318,7 +331,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         Debug.Log("call EndAttack");
         nav.enabled = false;
         while(true){    //NPC 위치 랜덤 순간이동
-            Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, NavMesh.AllAreas);
+            Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, navFloor, NavMesh.AllAreas);
             //Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos));
             if(Vector3.Distance(transform.position, teleportPos) > 15f){
                 Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos) + ", pos: " + teleportPos);
