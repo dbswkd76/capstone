@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    // Now Player Speed
-    public float applySpeed { get; set; }
+    // Player Speed - 벽 들고 달리는 현상 방지
+    private float playerSpeed = 0.0f;
+    public float applySpeed {
+        get { return playerSpeed; }
+        set {
+            playerSpeed = theActionController.isMovingWall ? 0.5f : value;
+        }
+    }
 
     // Speed
     [SerializeField]
@@ -27,7 +33,7 @@ public class PlayerControl : MonoBehaviour
     //private bool isInteract 
 
 
-    // Collider -> DELETE
+    // Collider
     private CapsuleCollider capsuleCollider;
 
     // PosY for Camera
@@ -47,6 +53,9 @@ public class PlayerControl : MonoBehaviour
 
     [SerializeField]
     private Camera theCamera;
+    [SerializeField]
+    private ActionController theActionController;
+
     private Rigidbody myRigid;
     private Animator anim;
     private GameObject lowPolyHuman;
@@ -63,6 +72,12 @@ public class PlayerControl : MonoBehaviour
         applyCrouchPosY = originPosY;
     }
 
+    // 0.02초마다 한 번씩 실행
+    void FixedUpdate()
+    {
+        Move();
+    }
+
     // Called once per frame
     void Update()
     {
@@ -72,7 +87,7 @@ public class PlayerControl : MonoBehaviour
             TryJump();
             TryRun();
             TryCrouch();
-            Move();
+            //Move();
             if (!Inventory.inventoryActivated)
             {
                 CameraRotation();
@@ -125,10 +140,6 @@ public class PlayerControl : MonoBehaviour
             yield return null;
         }
         theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
-
-
-
-
     }
 
     private void IsGround()
