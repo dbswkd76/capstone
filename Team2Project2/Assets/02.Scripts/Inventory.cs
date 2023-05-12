@@ -60,17 +60,18 @@ public class Inventory : MonoBehaviour
 
         if (Item.ItemType.Clue != _item.itemType)
         {
+            
 
-            for (int i = 0; i < slots.Length; i++)
+                for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i].item != null)
-                {
-                    if (slots[i].item.itemName == _item.itemName)
+                    if (slots[i].item != null)
                     {
-                        slots[i].SetSlotCount(_count);
-                        return;
-                    }
-
+                        if (slots[i].item.itemName == _item.itemName)
+                        {
+                            slots[i].SetSlotCount(_count);
+                            return;
+                        }
+                    
                 }
             }
         }

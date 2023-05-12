@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class opencloseDoor0247 : MonoBehaviour
 {
-
 	public Animator openandclose1;
 	public bool open;
 	public Transform Player;

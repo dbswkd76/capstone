@@ -133,7 +133,7 @@ public class Slot : MonoBehaviour ,   IPointerExitHandler , IPointerClickHandler
                    
 
                 }
-                else
+                else if(item.itemType == Item.ItemType.Tool)
                 {
                     Debug.Log(item.itemName + " 를 사용했습니다.");
                     theItemEffectDatabase.UseItem(item);
@@ -142,6 +142,10 @@ public class Slot : MonoBehaviour ,   IPointerExitHandler , IPointerClickHandler
                     GameObject.Find("물마시는소리").GetComponent<AudioSource>().Play();
 
                     
+                }
+                else
+                {
+
                 }
                 
             }

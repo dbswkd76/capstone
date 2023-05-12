@@ -10,7 +10,6 @@ public class opencloseDoor1: MonoBehaviour {
 	public AudioSource audio;
 	public AudioClip _openSound;
 	public AudioClip _closeSound;
-	
 
 	void Start (){
 		open = false;
