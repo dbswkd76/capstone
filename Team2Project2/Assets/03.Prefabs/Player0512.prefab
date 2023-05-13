@@ -8482,7 +8482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5391609830154594030
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8592,7 +8592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5391609830474977261
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8951,7 +8951,7 @@ GameObject:
   - component: {fileID: 5391609831305106340}
   - component: {fileID: 5391609831305106341}
   m_Layer: 3
-  m_Name: Poison_bar
+  m_Name: HpGuage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9024,14 +9024,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5391609831890188142}
-  - component: {fileID: 5391609831890188141}
   m_Layer: 3
   m_Name: Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5391609831890188142
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9056,26 +9055,6 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 118}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5391609831890188141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5391609831890188143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eea6e4880c74fe45982feb5a6b5765b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Player: {fileID: 7379923434952215351}
-  hp: 100
-  hpDecreaseTime: 190
-  poison: 100
-  poisonDecreaseTime: 200
-  images_Gauge:
-  - {fileID: 5391609830154594029}
-  - {fileID: 5391609831305106341}
 --- !u!1 &5445013245475269361
 GameObject:
   m_ObjectHideFlags: 0
@@ -10672,6 +10651,7 @@ GameObject:
   - component: {fileID: 7379923434952215345}
   - component: {fileID: 7379923434952215350}
   - component: {fileID: 7379923434952215349}
+  - component: {fileID: 1414117578}
   m_Layer: 3
   m_Name: Player0512
   m_TagString: Player
@@ -10775,6 +10755,19 @@ MonoBehaviour:
   deathcount: 0
   clock: {fileID: 0}
   Player: {fileID: 0}
+--- !u!114 &1414117578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379923434952215351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eea6e4880c74fe45982feb5a6b5765b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpGauge: {fileID: 5391609831305106341}
 --- !u!1 &7391942839168827343
 GameObject:
   m_ObjectHideFlags: 0

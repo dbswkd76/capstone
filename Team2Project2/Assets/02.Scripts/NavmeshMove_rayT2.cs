@@ -109,9 +109,9 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         //Debug.Log(target.health);
         Debug.Log(hasTarget + ", " + nav.destination);
         Debug.Log("path " + nav.hasPath + ", To: " + nav.destination);
-        if(!nav.hasPath){
+        /*if(!nav.hasPath){
             StartCoroutine(UpdatePath());
-        }
+        }*/
         //Debug.Log("To target: " + nav.remainingDistance);
 
     }
@@ -190,6 +190,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         {   
             Debug.Log("코루틴 동작중 : target? " + hasTarget);
             if(hasTarget && !IsTargetOnSight(target.transform.position)){    //타겟이 레이에 없으면
+                Debug.Log("target bug fix temp");
                 target = null;
             }
             if(hasTarget){  //타겟 존재
@@ -208,7 +209,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                 }
                 //var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);
                 Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
-                //Debug.Log("colider length: " + colliders.Length);
+                Debug.Log("colider length: " + colliders.Length);
                 if(colliders.Length == 0){  //인식된 콜라이더 없을 때
                     Debug.Log("코루틴 2nd 콜라이더0");
                     //nav.SetDestination(patrolPosition);
@@ -232,7 +233,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                                 targetPoint = patrolPosition;       
                                 nav.SetDestination(patrolPosition); //목표 재설정
                             }
-                            continue;   //패스
+                            //continue;   //패스
+                            break;
                         }
                         //콜라이더 인식, ray 보일 때
                         var targetPlayer = colider.GetComponent<StatusController>();

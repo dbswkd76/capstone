@@ -25,15 +25,15 @@ public class InformationController : MonoBehaviour
     {
         if (raycastInfo.isRaycastHitChanged)
         {
-            // ±¤¼± Ãæµ¹X -> Ãæµ¹O º¯°æµÇ¾úÀ» ¶§
+            // ê´‘ì„  ì¶©ëŒX -> ì¶©ëŒO ë³€ê²½ë˜ì—ˆì„ ë•Œ
             if (raycastInfo.isPresentRaycastHit)
             {
                 isInfoControl = true;
-                Debug.Log("±¤¼± Ãæµ¹X -> ±¤¼± Ãæµ¹O");
-                Debug.Log("±¤¼± Ãæµ¹ ¹°Ã¼°¡ º¯°æµÊ. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
+                Debug.Log("ê´‘ì„  ì¶©ëŒX -> ê´‘ì„  ì¶©ëŒO");
+                Debug.Log("ê´‘ì„  ì¶©ëŒ ë¬¼ì²´ê°€ ë³€ê²½ë¨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
                 InfoControl();
             }
-            // ±¤¼± Ãæµ¹O -> Ãæµ¹X º¯°æµÇ¾úÀ» ¶§
+            // ê´‘ì„  ì¶©ëŒO -> ì¶©ëŒX ë³€ê²½ë˜ì—ˆì„ ë•Œ
             else
             {
                 isInfoControl = false;
@@ -44,41 +44,41 @@ public class InformationController : MonoBehaviour
                 }
                 raycastInfo.previousObject = null;
 
-                Debug.Log("±¤¼± Ãæµ¹O -> ±¤¼± Ãæµ¹X");
-                Debug.Log("Á¤º¸ UI, ¿Ü°û¼±, previousObject ÃÊ±âÈ­");
+                Debug.Log("ê´‘ì„  ì¶©ëŒO -> ê´‘ì„  ì¶©ëŒX");
+                Debug.Log("ì •ë³´ UI, ì™¸ê³½ì„ , previousObject ì´ˆê¸°í™”");
             }
         }
 
-        // ±¤¼±ÀÌ »õ·Î Ãæµ¹ÇÏ°Å³ª, Ãæµ¹ÁßÀÎ »óÅÂ¿¡¼­ ¹°Ã¼°¡ º¯°æµÇ¾úÀ» ¶§ È£Ãâ
+        // ê´‘ì„ ì´ ìƒˆë¡œ ì¶©ëŒí•˜ê±°ë‚˜, ì¶©ëŒì¤‘ì¸ ìƒíƒœì—ì„œ ë¬¼ì²´ê°€ ë³€ê²½ë˜ì—ˆì„ ë•Œ í˜¸ì¶œ
         if (isInfoControl && raycastInfo.isRaycastHitObjectChanged)
         {
-            Debug.Log("±¤¼± Ãæµ¹ ¹°Ã¼°¡ º¯°æµÊ. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
+            Debug.Log("ê´‘ì„  ì¶©ëŒ ë¬¼ì²´ê°€ ë³€ê²½ë¨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
             InfoControl();
         }
     }
 
-    // Á¤º¸ UI ¹× ¿Ü°û¼± Á¦¾î
+    // ì •ë³´ UI ë° ì™¸ê³½ì„  ì œì–´
     private void InfoControl()
     {
-        // Á¤º¸ UI ºñÈ°¼ºÈ­ ¹× ÀÌÀü ¿ÀºêÁ§Æ® ¿Ü°û¼± Á¦°Å
+        // ì •ë³´ UI ë¹„í™œì„±í™” ë° ì´ì „ ì˜¤ë¸Œì íŠ¸ ì™¸ê³½ì„  ì œê±°
         InfoDisappear();
         if (raycastInfo.previousObject != null && raycastInfo.previousObject.GetComponent<Outline>() != null)
         {
             OutlineDisappear(raycastInfo.previousObject);
         }
 
-        // ÅÂ±×¿¡ µû¶ó¼­ Á¤º¸ UI ¹× ¿Ü°û¼± Á¦¾î
+        // íƒœê·¸ì— ë”°ë¼ì„œ ì •ë³´ UI ë° ì™¸ê³½ì„  ì œì–´
         switch (raycastInfo.presentObject.tag)
         {
             case "Item":
-                InfoAppear(raycastInfo.presentObject.GetComponent<ItemPickUp>().item.itemName + "  È¹µæ" + "<color=yellow>" + " (E)" + "</color>");
+                InfoAppear(raycastInfo.presentObject.GetComponent<ItemPickUp>().item.itemName + "  íšë“" + "<color=yellow>" + " (E)" + "</color>");
                 OutlineAppear(raycastInfo.presentObject, Color.yellow, 10.0f);
                 break;
 
             case "MovingWall":
                 if (actionController.isMoveWallActivated)
                 {
-                    InfoAppear("¿Å±â±â" + "<color=yellow>" + " (R)" + "</color>");
+                    InfoAppear("ì˜®ê¸°ê¸°" + "<color=yellow>" + " (R)" + "</color>");
                     OutlineAppear(raycastInfo.presentObject, Color.green, 10.0f);
                 }
                 break;
@@ -86,7 +86,7 @@ public class InformationController : MonoBehaviour
             case "FixedWall":
                 if (actionController.isMoveWallActivated)
                 {
-                    InfoAppear("<color=red>" + "ÀÌµ¿ ºÒ°¡" + "</color>");
+                    InfoAppear("<color=red>" + "ì´ë™ ë¶ˆê°€" + "</color>");
                     OutlineAppear(raycastInfo.presentObject, Color.red, 10.0f);
                 }
                 break;
@@ -94,7 +94,7 @@ public class InformationController : MonoBehaviour
             case "MovingTemp":
                 if (actionController.isMovingWall)
                 {
-                    InfoAppear("³»·Á³õ±â");
+                    InfoAppear("ë‚´ë ¤ë†“ê¸°");
                     OutlineAppear(raycastInfo.presentObject, Color.red, 10.0f);
                 }
                 break;
@@ -107,21 +107,21 @@ public class InformationController : MonoBehaviour
         }
     }
 
-    // Á¤º¸ UI È°¼ºÈ­
+    // ì •ë³´ UI í™œì„±í™”
     private void InfoAppear(string txt)
     {
         actionText.text = txt;
         actionText.gameObject.SetActive(true);
     }
 
-    // Á¤º¸ UI ºñÈ°¼ºÈ­
+    // ì •ë³´ UI ë¹„í™œì„±í™”
     private void InfoDisappear()
     {
         actionText.text = "";
         actionText.gameObject.SetActive(false);
     }
 
-    // ¿Ü°û¼± È°¼ºÈ­ - Outline ÄÄÆ÷³ÍÆ® ºÎÂø
+    // ì™¸ê³½ì„  í™œì„±í™” - Outline ì»´í¬ë„ŒíŠ¸ ë¶€ì°©
     private void OutlineAppear(GameObject outlineObject, Color color, float width)
     {
         outlineObject.AddComponent<Outline>();
@@ -130,7 +130,7 @@ public class InformationController : MonoBehaviour
         outlineObject.GetComponent<Outline>().OutlineWidth = width;
     }
 
-    // ¿Ü°û¼± ºñÈ°¼ºÈ­ - Outline ÄÄÆ÷³ÍÆ® ÆÄ±«
+    // ì™¸ê³½ì„  ë¹„í™œì„±í™” - Outline ì»´í¬ë„ŒíŠ¸ íŒŒê´´
     private void OutlineDisappear(GameObject outlineObject)
     {
         Destroy(outlineObject.GetComponent<Outline>());
