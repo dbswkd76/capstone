@@ -31,7 +31,7 @@ public class PlayerControl : MonoBehaviour
     private bool isRun = false;
     private bool isCrouch = false;
     //private bool isInteract 
-
+    public bool isCrouchToNav;
 
     // Collider
     private CapsuleCollider capsuleCollider;
@@ -120,7 +120,7 @@ public class PlayerControl : MonoBehaviour
             applySpeed = walkSpeed;
             applyCrouchPosY = originPosY;
         }
-
+        isCrouchToNav = isCrouch;   //NPC 처리용
         StartCoroutine(CrouchCoroutine());
     }
 

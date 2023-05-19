@@ -29,8 +29,8 @@ public class InformationController : MonoBehaviour
             if (raycastInfo.isPresentRaycastHit)
             {
                 isInfoControl = true;
-                Debug.Log("광선 충돌X -> 광선 충돌O");
-                Debug.Log("광선 충돌 물체가 변경됨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
+                //Debug.Log("광선 충돌X -> 광선 충돌O");
+                //Debug.Log("광선 충돌 물체가 변경됨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
                 InfoControl();
             }
             // 광선 충돌O -> 충돌X 변경되었을 때
@@ -44,15 +44,15 @@ public class InformationController : MonoBehaviour
                 }
                 raycastInfo.previousObject = null;
 
-                Debug.Log("광선 충돌O -> 광선 충돌X");
-                Debug.Log("정보 UI, 외곽선, previousObject 초기화");
+                //Debug.Log("광선 충돌O -> 광선 충돌X");
+                //Debug.Log("정보 UI, 외곽선, previousObject 초기화");
             }
         }
 
         // 광선이 새로 충돌하거나, 충돌중인 상태에서 물체가 변경되었을 때 호출
         if (isInfoControl && raycastInfo.isRaycastHitObjectChanged)
         {
-            Debug.Log("광선 충돌 물체가 변경됨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
+            //Debug.Log("광선 충돌 물체가 변경됨. Previous = " + raycastInfo.previousObject + ", Present = " + raycastInfo.presentObject);
             InfoControl();
         }
     }
