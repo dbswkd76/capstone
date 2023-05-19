@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
+//플레이어 데미지컨트롤
 public struct DamageMsg{
   public GameObject damager;
   public int amount;
@@ -18,7 +19,7 @@ public class StatusController : MonoBehaviour{
   public int health{get; protected set;} //현재 정신력
   public bool dead{get; protected set;}  //사망 상태
 
-  private const float minDelayDamaged = 2f;
+  private const float minDelayDamaged = 0.1f;
   private float lastDamagedTime;
   protected bool CanDamagable{
     get{
@@ -35,11 +36,12 @@ public class StatusController : MonoBehaviour{
     health = startingHealth;
   }
   public virtual bool OnDamage(DamageMsg damageMsg){
-    if(CanDamagable ||damageMsg.damager == gameObject || dead) return false;
-
+    if(CanDamagable ||damageMsg.damager == gameObject || dead){
+      return false;
+    }
     lastDamagedTime = Time.time;
     health -= damageMsg.amount;
-
+    
     if(health <= 0) Die();
     return true;
   }
@@ -63,10 +65,10 @@ public class StatusController : MonoBehaviour{
 
   void Start(){
     player = GameObject.FindWithTag("Player");
-    //hpGauge = transform.GetComponentInChildren<Image>();
   }
   void Update(){
     GaugeUpdate();
+    Debug.Log("player health: " + health);
   }
 }
 
