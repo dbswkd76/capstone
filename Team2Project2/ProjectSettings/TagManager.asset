@@ -11,6 +11,7 @@ TagManager:
   - MovingWall
   - FixedWall
   - MovingTemp
+  - NPC
   layers:
   - Default
   - TransparentFX

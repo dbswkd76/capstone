@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor;
 
-public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
+public class NavmeshMove_rayT2 : MonoBehaviour
 {
     private enum State
     {
@@ -48,7 +48,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     private float timer;
     //플레이어 피격관련 시각효과 스크립트용 변수
     public LowHP.LowHealthEffect lhe;
-    public Attacked.AttackedEffect ate;
 
     #if UNITY_EDITOR
     private void OnDrawGizmosSelected(){    //NPC 공격 범위 표시용 테스트 함수
@@ -97,15 +96,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     }
     void Update()
     {
-        /*if(target == null || target.dead){
-            Debug.Log(state);
-            //return;    //타겟 dead
-        }*/
-        /*if(!hasTarget || target.dead){
-            Debug.Log("no!");
-            return;
-        }*/
-        //Debug.Log(Vector3.Distance(target.transform.position, transform.position) + ", " + timer);
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
             //Debug.Log("ready to attack!");
             //BeginAttack();
@@ -166,22 +156,23 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
             for(int i = 0; i < size; i++){
                 var attackTargetObj = hits[i].collider.GetComponent<StatusController>();
                 if(attackTargetObj.tag == "Player" && attackTargetObj != null && !lastTargets.Contains(attackTargetObj)){
-                    Debug.Log("attack player access");
-                   var message = new DamageMsg();
-                   message.amount = attackPower;
-                   message.damager = gameObject;
+                    Debug.Log("player attack success!");
+                    var message = new DamageMsg();
+                    message.amount = attackPower;
+                    message.damager = gameObject;
 
-                   if(hits[i].distance <= 0f){
-                    message.hitPoint = attackRoot.position;
-                   }
-                   else{
-                    message.hitPoint = hits[i].point;
-                   }
-                   message.hitNormal = hits[i].normal;
+                    if(hits[i].distance <= 0f){
+                        message.hitPoint = attackRoot.position;
+                    }
+                    else{
+                        message.hitPoint = hits[i].point;
+                    }
+                    message.hitNormal = hits[i].normal;
                    
-                   attackTargetObj.OnDamage(message);
-                   lastTargets.Add(attackTargetObj);
-                   break;
+                    attackTargetObj.OnDamage(message);
+                    lastTargets.Add(attackTargetObj);
+                    //lastTargets.Clear();
+                    break;
                 }
 
             }
@@ -220,7 +211,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
                 //break;
             }
             else{
-                Debug.Log("else 실행");
                 if(state != State.Patrol){
                     state = State.Patrol;
                     nav.speed = patrolSpeed;
@@ -357,24 +347,27 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         Debug.Log("call beginattack");
         state = State.AttackBegin;
         nav.isStopped = true;
+        GameManager.isAttacked = true;
         animator.SetTrigger("attack");
     }
     private void Attack(){
+        //메소드 호출 시 NPC상태 변경, 타겟리스트 추가
         Debug.Log("call Attack");
         state = State.Attacking;
-        //isAttack = true;    //시각효과 스크립트용
         //lhe.helathChangeByNPC(target.health);
         lastTargets.Clear();
     }
     private void Attacking(){
         Debug.Log("attacked by NPC!");
         lhe.helathChangeByNPC(target.health);
+        lhe.takeDamageByNPC();
+        //target.GetComponent<PlayerControl>().isAttackedFov();
     }
     private void EndAttack(){
         Debug.Log("call EndAttack");
+        GameManager.isAttacked = false;
         animator.SetTrigger("teleport");
         nav.enabled = false;
-        //isAttack = false;   //시각효과 스크립트용
         while(true){    //NPC 위치 랜덤 순간이동
             Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, navFloor, NavMesh.AllAreas);
             //Debug.Log("distance: " + Vector3.Distance(transform.position, teleportPos));
@@ -390,11 +383,9 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         target = null; 
         if(hasTarget){
             state = State.Tracking;
-            Debug.Log("End target yes");
         }
         else{
             state = State.Patrol;
-            Debug.Log("End no target");
         }
         nav.isStopped = false;
         StartCoroutine(UpdatePath());

@@ -60,7 +60,13 @@ public class PlayerControl : MonoBehaviour
     private Animator anim;
     private GameObject lowPolyHuman;
 
-    
+    //for NPC Zoom in/out effect
+    private Camera playerCamera;
+    private float playerFov;
+    private GameObject npc;
+    private float turnSmoothVelocity;
+    [Range(0.01f, 2f)] public float turnSmoothTime = 10f;
+
     void Start()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
@@ -70,17 +76,22 @@ public class PlayerControl : MonoBehaviour
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
+
+        playerFov = 0f;
     }
 
     // 0.02초마다 한 번씩 실행
     void FixedUpdate()
     {
-        Move();
+        if(!GameManager.isAttacked){
+            Move();
+        }
     }
 
     // Called once per frame
     void Update()
-    {
+    {   
+        theCamera.fieldOfView = 60f;
         if (GameManager.canPlayerMove)
         {
             IsGround();
@@ -93,6 +104,9 @@ public class PlayerControl : MonoBehaviour
                 CameraRotation();
                 CharacterRotation();
             }
+        }
+        else{   //isAttacked
+            isAttackedFov();
         }
     }
    
@@ -230,5 +244,24 @@ public class PlayerControl : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+    }
+    
+    public void isAttackedFov(){
+        Debug.Log("force to see NPC");
+        //GameManager.canPlayerMove = false;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
+        foreach(var colider in colliders){
+            if(colider.tag == "NPC"){
+                npc = colider.gameObject;
+                break;
+            }
+        }
+        Debug.Log("npc name: " + npc.name);
+
+        theCamera.fieldOfView = 30f;
+        var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);
+        var targetAngleY = lookRotation.eulerAngles.y;
+        transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+        theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
     }
 }

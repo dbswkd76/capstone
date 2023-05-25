@@ -56,7 +56,7 @@ namespace Leguar.LowHealth.Example {
 			if (takingDamage>0f) {
 				takingDamage -= Time.deltaTime*1f;
 				shaderAccessScript.SetColorLossEffect(takingDamage, 1f);
-//				shaderAccessScript.SetVisionLossEffect(takingDamage*0.5f); // Uncomment to add darkening effect to taking damage, but this will then clash with "Waking up 1" effect
+				shaderAccessScript.SetVisionLossEffect(takingDamage*0.5f); // Uncomment to add darkening effect to taking damage, but this will then clash with "Waking up 1" effect
 			}
 
 			if (beingDizzy>0f) {
