@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Drawer_Pull_Z: MonoBehaviour {
 
-	public Animator pull;
 	public bool open;
+	public Animator pull;
 	public Transform Player;
+
+	[SerializeField]
+	private SoundManager soundManager;
 
 	void Start (){
 		open = false;
@@ -21,12 +24,14 @@ public class Drawer_Pull_Z: MonoBehaviour {
 					if (open == false) {
 						if (Input.GetMouseButtonDown (0)) {
 							StartCoroutine (opening ());
-						}
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDrawer");
+                        }
 					} else {
 						if (open == true) {
 							if (Input.GetMouseButtonDown (0)) {
 								StartCoroutine (closing ());
-							}
+                                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDrawer");
+                            }
 						}
 
 					}
@@ -39,14 +44,14 @@ public class Drawer_Pull_Z: MonoBehaviour {
 	}
 
 	IEnumerator opening(){
-		print ("you are opening the door");
+		//print ("you are opening the door");
 		pull.Play ("openpull");
 		open = true;
 		yield return new WaitForSeconds (.5f);
 	}
 
 	IEnumerator closing(){
-		print ("you are closing the door");
+		//print ("you are closing the door");
 		pull.Play ("closepush");
 		open = false;
 		yield return new WaitForSeconds (.5f);

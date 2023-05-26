@@ -2,85 +2,104 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class opencloseDoor2: MonoBehaviour {
+public class opencloseDoor2 : MonoBehaviour
+{
 
-	public Animator openandclose1;
-	public bool open;
-	public Transform Player;
-	public AudioSource audio;
-	public AudioClip _openSound;
-	public AudioClip _closeSound;
-	public AudioClip _lockdoor;
-	public KeyControl keycon;
-	
-	
-	void Start (){
-		open = false;
+    public Animator openandclose1;
+    public bool open;
+    
+    public Transform Player;
+    public AudioClip _lockdoor;
+    public KeyControl keycon;
 
-		Player = GameObject.FindWithTag("Player").transform;
+    private bool previousKeycon;
 
-		audio = GetComponent<AudioSource>();
-		if (Player == null)
+    [SerializeField]
+    private SoundManager soundManager;
+
+    void Start()
+    {
+        open = false;
+        previousKeycon = true;
+
+        Player = GameObject.FindWithTag("Player").transform;
+
+        if (Player == null)
         {
-			Debug.LogError("플레이어 찾지 못함.");
+            Debug.LogError("플레이어 찾지 못함.");
         }
-		
-	}
 
-	void OnMouseOver (){
-		{
-			if (Player) {
-				float dist = Vector3.Distance (Player.position, transform.position);
-				if (dist < 3) {
-					if (open == false && keycon.isLocked == false)
-					{
-						if (Input.GetMouseButtonDown(0))
-						{
-							StartCoroutine(opening());
-							audio.clip = _openSound;
-							audio.Play();
-						}
-						else if (open == false && keycon.isLocked == true)
+    }
+
+    void OnMouseOver()
+    {
+        {
+            if (Player)
+            {
+                float dist = Vector3.Distance(Player.position, transform.position);
+                if (dist < 3)
+                {
+                    if (open == false && keycon.isLocked == false)
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                        {   
+                            if(IsLockedChange()) soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockOpen");
+                            StartCoroutine(opening());
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDoor");
+                        }
+                    }
+                    else if (open == false && keycon.isLocked == true)
+                    {
+                        if (Input.GetMouseButtonDown(0))
                         {
-							if (Input.GetMouseButtonDown(0))
-							{
-								audio.clip = _lockdoor;
-								audio.Play();
-							}
-						
-					}
-					} else if (open == true) {
-							if (Input.GetMouseButtonDown (0)) {
-								StartCoroutine (closing ());
-								audio.clip = _closeSound;
-								audio.Play();
-							}
-						}
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockedDoor");
+                        }
+                    }
+                    else if (open == true)
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            StartCoroutine(closing());
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDoor");
+                        }
+                    }
+                }
+            }
 
-					
+        }
 
-				}
-			}
+    }
 
-		}
+    private bool IsLockedChange()
+    {
+        if(previousKeycon == keycon.isLocked)
+        {
+            return false;
+        }
+        else
+        {
+            previousKeycon = false;
+            return true;
+        }
+    }
 
-	}
+    IEnumerator opening()
+    {
+        //print ("you are opening the door");
+        openandclose1.Play("Opening 1");
+        open = true;
+        yield return new WaitForSeconds(.5f);
+    }
 
-	IEnumerator opening(){
-		print ("you are opening the door");
-		openandclose1.Play ("Opening 1");
-		open = true;
-		yield return new WaitForSeconds (.5f);
-	}
+    IEnumerator closing()
+    {
+        //print ("you are closing the door");
+        openandclose1.Play("Closing 1");
+        open = false;
+        yield return new WaitForSeconds(.5f);
+    }
 
-	IEnumerator closing(){
-		print ("you are closing the door");
-		openandclose1.Play ("Closing 1");
-		open = false;
-		yield return new WaitForSeconds (.5f);
-	}
 
-	
-	
+
 }
 

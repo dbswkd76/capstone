@@ -6,6 +6,10 @@ public class LockControl0247 : MonoBehaviour
 {
     private int[] result, correctCombination;
     public bool isOpened;
+    
+    [SerializeField]
+    private SoundManager soundManager;
+
     private void Start()
     {
         result = new int[]{0,0,0,0};
@@ -40,6 +44,7 @@ public class LockControl0247 : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.06f, transform.position.z);
             isOpened = true;
+            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockOpen");
         }
     }
 

@@ -8,8 +8,10 @@ public class Drawer_Pull_Z0427: MonoBehaviour {
 	public bool open;
 	public Transform Player;
 	public LockControl3211 _lock;
+    [SerializeField]
+    private SoundManager soundManager;
 
-	void Start (){
+    void Start (){
 		open = false;
 		Player = GameObject.FindWithTag("Player").transform;
 	}
@@ -23,12 +25,14 @@ public class Drawer_Pull_Z0427: MonoBehaviour {
 					if (open == false && _lock.isOpened == true) {
 						if (Input.GetMouseButtonDown (0)) {
 							StartCoroutine (opening ());
-						}
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDrawer");
+                        }
 					} else {
 						if (open == true) {
 							if (Input.GetMouseButtonDown (0)) {
 								StartCoroutine (closing ());
-							}
+                                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDrawer");
+                            }
 						}
 
 					}
@@ -41,14 +45,14 @@ public class Drawer_Pull_Z0427: MonoBehaviour {
 	}
 
 	IEnumerator opening(){
-		print ("you are opening the door");
+		//print ("you are opening the door");
 		pull.Play ("openpull");
 		open = true;
 		yield return new WaitForSeconds (.25f);
 	}
 
 	IEnumerator closing(){
-		print ("you are closing the door");
+		//print ("you are closing the door");
 		pull.Play ("closepush");
 		open = false;
 		yield return new WaitForSeconds (.25f);

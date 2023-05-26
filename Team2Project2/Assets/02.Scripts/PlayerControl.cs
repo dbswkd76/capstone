@@ -9,7 +9,8 @@ public class PlayerControl : MonoBehaviour
     public float applySpeed {
         get { return playerSpeed; }
         set {
-            playerSpeed = theActionController.isMovingWall ? 0.5f : value;
+            playerSpeed = theActionController.isMovingWall ? holdWallSpeed : value;
+            anim.SetFloat("speed", holdWallSpeed / walkSpeed);
         }
     }
 
@@ -20,6 +21,8 @@ public class PlayerControl : MonoBehaviour
     private float runSpeed;
     [SerializeField]
     private float crouchSpeed;
+    [SerializeField]
+    private float holdWallSpeed;
 
     // JumpForce
     [SerializeField]
@@ -55,6 +58,8 @@ public class PlayerControl : MonoBehaviour
     private Camera theCamera;
     [SerializeField]
     private ActionController theActionController;
+    [SerializeField]
+    private SoundManager theSoundManager;
 
     private Rigidbody myRigid;
     private Animator anim;
@@ -70,6 +75,7 @@ public class PlayerControl : MonoBehaviour
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
+        anim.SetFloat("speed", 1);
     }
 
     // 0.02초마다 한 번씩 실행
@@ -111,12 +117,14 @@ public class PlayerControl : MonoBehaviour
         if (isCrouch)
         {
             anim.SetBool("isCrouch", true);
+            theSoundManager.playerFootstepPlayer.mute = true;
             applySpeed = crouchSpeed;
             applyCrouchPosY = crouchPosY;
         }
         else
         {
             anim.SetBool("isCrouch", false);
+            theSoundManager.playerFootstepPlayer.mute = false;
             applySpeed = walkSpeed;
             applyCrouchPosY = originPosY;
         }
@@ -160,6 +168,7 @@ public class PlayerControl : MonoBehaviour
         if (isCrouch)
             Crouch();
         anim.SetTrigger("jump");
+        theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PlayerJump");
         myRigid.velocity = transform.up * jumpForece;
     }
 
@@ -183,12 +192,14 @@ public class PlayerControl : MonoBehaviour
 
         isRun = true;
         applySpeed = runSpeed;
+        anim.SetFloat("speed", runSpeed / walkSpeed);
     }
 
     private void RunningCancel()
     {
         isRun = false;
         applySpeed = walkSpeed;
+        anim.SetFloat("speed", 1);
     }
 
     private void Move()

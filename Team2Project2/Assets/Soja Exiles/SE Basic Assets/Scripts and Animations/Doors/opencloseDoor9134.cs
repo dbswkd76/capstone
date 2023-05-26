@@ -9,17 +9,15 @@ public class opencloseDoor9134 : MonoBehaviour
 	public bool open;
 	public Transform Player;
 	public LockControl9134 _lock;
-	public AudioSource audio;
-	public AudioClip _openSound;
-	public AudioClip _closeSound;
 
+	[SerializeField]
+	private SoundManager soundManager;
 
 	void Start()
 	{
 		open = false;
 
 		Player = GameObject.FindWithTag("Player").transform;
-		audio = GetComponent<AudioSource>();
 
 
 		if (Player == null)
@@ -37,31 +35,36 @@ public class opencloseDoor9134 : MonoBehaviour
 				float dist = Vector3.Distance(Player.position, transform.position);
 				if (dist < 3)
 				{
-					if (open == false && _lock.isOpened == true)
-					{
-						if (Input.GetMouseButtonDown(0))
-						{
-							StartCoroutine(opening());
-							audio.clip = _openSound;
-							audio.Play();
-						}
-						else Debug.Log("문잠김 ");
-					}
-					else
-					{
-						if (open == true)
-						{
-							if (Input.GetMouseButtonDown(0))
-							{
-								StartCoroutine(closing());
-								audio.clip = _closeSound;
-								audio.Play();
-							}
-						}
+                    if (open == false && _lock.isOpened == true)
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            StartCoroutine(opening());
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDoor");
+                        }
 
-					}
+                    }
+                    else if (open == false && _lock.isOpened == false)
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockedDoor");
+                        }
+                    }
+                    else
+                    {
+                        if (open == true)
+                        {
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                StartCoroutine(closing());
+                                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDoor");
+                            }
+                        }
 
-				}
+                    }
+
+                }
 			}
 
 		}
@@ -70,7 +73,7 @@ public class opencloseDoor9134 : MonoBehaviour
 
 	IEnumerator opening()
 	{
-		print("you are opening the door");
+		//print("you are opening the door");
 		openandclose1.Play("Opening 1");
 		open = true;
 		yield return new WaitForSeconds(.5f);
@@ -78,7 +81,7 @@ public class opencloseDoor9134 : MonoBehaviour
 
 	IEnumerator closing()
 	{
-		print("you are closing the door");
+		//print("you are closing the door");
 		openandclose1.Play("Closing 1");
 		open = false;
 		yield return new WaitForSeconds(.5f);
