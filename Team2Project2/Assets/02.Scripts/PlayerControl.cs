@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Kino;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -65,7 +66,11 @@ public class PlayerControl : MonoBehaviour
     private float playerFov;
     private GameObject npc;
     private float turnSmoothVelocity;
-    [Range(0.01f, 2f)] public float turnSmoothTime = 10f;
+    [Range(0.01f, 2f)] public float turnSmoothTime;
+
+    //NPC nearby effect
+    public AnalogGlitch glitchEffect;
+    private float intensity = 0.5f;
 
     void Start()
     {
@@ -263,5 +268,16 @@ public class PlayerControl : MonoBehaviour
         var targetAngleY = lookRotation.eulerAngles.y;
         transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
         theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+    }
+    private void OnTriggerStay(Collider collider){
+        if(collider.tag == "NPC"){
+            Vector3 distance = transform.position - collider.transform.position;
+            glitchEffect.scanLineJitter = intensity / distance.magnitude;
+        }
+    }
+    private void OnTriggerExit(Collider collider){
+        if(collider.tag == "NPC"){
+            glitchEffect.scanLineJitter = 0f;
+        }
     }
 }

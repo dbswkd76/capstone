@@ -1,6 +1,3 @@
-//    ExampleScript - LowHealth
-
-
 using UnityEngine;
 using UnityEngine.AI;
 using Leguar.LowHealth;
