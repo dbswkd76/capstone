@@ -21,7 +21,7 @@ public class ActionController : MonoBehaviour
     private Inventory theInventory;
     [SerializeField]
     private PlayerControl thePlayerControl;
-    [SerializeField]
+    //[SerializeField]
     private SoundManager theSoundManager;
 
 

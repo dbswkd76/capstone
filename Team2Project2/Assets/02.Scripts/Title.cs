@@ -6,15 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class Title : MonoBehaviour
 {
-     public GameObject manual;
+    public GameObject manual;
 
-     public void Update()
-     {
+    public void Awake()
+    {
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true; 
-     }
-     
-     public void GameStart()
+        Cursor.visible = true;
+
+        //SoundManager.instance.PlaySound(SoundManager.instance.bgmPlayer, SoundManager.instance.bgm, "Opening");
+        
+
+    }
+
+    public void GameStart()
     {
         Debug.Log("게임시작");
         SceneManager.LoadScene(1);
@@ -23,11 +27,11 @@ public class Title : MonoBehaviour
     public void GameManual()
     {
         if (manual.activeSelf)
-                manual.SetActive(false);
-            else
-                manual.SetActive(true);
+            manual.SetActive(false);
+        else
+            manual.SetActive(true);
     }
-      
+
     public void GameExit()
     {
         Debug.Log("게임종료");

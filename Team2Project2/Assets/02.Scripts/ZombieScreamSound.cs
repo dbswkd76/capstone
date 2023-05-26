@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ZombieScreamSound : MonoBehaviour
 {
-    [SerializeField]
     private SoundManager theSoundManager;
 
     // Start is called before the first frame update
@@ -17,7 +16,6 @@ public class ZombieScreamSound : MonoBehaviour
     public void ZombieScream()
     {
         theSoundManager.PlayZombieScream();
-        //Debug.Log("비명 지른다!");
         Invoke("ZombieScream", Random.Range(4, 8));
     }
 }

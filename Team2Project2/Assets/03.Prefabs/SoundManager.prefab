@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8987724874922588027}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -4.64, y: 12.84, z: 12.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -32,7 +32,7 @@ Transform:
   - {fileID: 8987724875100007980}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &8987724874922588016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,6 +57,14 @@ MonoBehaviour:
   sfx:
   - name: PlayerJump
     clip: {fileID: 8300000, guid: c86476186f357d44eb470d68a2986520, type: 3}
+  - name: OpenDoor
+    clip: {fileID: 8300000, guid: 81151fa68fc920f44ab567ec21a2b4da, type: 3}
+  - name: CloseDoor
+    clip: {fileID: 8300000, guid: 58b40096042df434c86903b650a90291, type: 3}
+  - name: LockedDoor
+    clip: {fileID: 8300000, guid: 9c335cc328fb9534f95bacc4343d7018, type: 3}
+  - name: LockOpen
+    clip: {fileID: 8300000, guid: 4fe7d17aaf4ebd843beef418122c303d, type: 3}
   - name: HpItemUse
     clip: {fileID: 8300000, guid: ddff8fc9685f3ce439377307ed3789ee, type: 3}
   - name: PickUpPaper
@@ -65,10 +73,6 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: b1bc4c44e0ecc454dad5ed94653c98fc, type: 3}
   - name: PickUpItem
     clip: {fileID: 8300000, guid: 4278b54125deca2488eab920db6e0c61, type: 3}
-  - name: LockedDoor
-    clip: {fileID: 8300000, guid: 9c335cc328fb9534f95bacc4343d7018, type: 3}
-  - name: LockOpen
-    clip: {fileID: 8300000, guid: 4fe7d17aaf4ebd843beef418122c303d, type: 3}
   - name: OpenCupboard
     clip: {fileID: 8300000, guid: 6274505e3beb5ab4584a11ba033ef834, type: 3}
   - name: CloseCupboard
@@ -140,12 +144,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: d15f7338d693f0343843a6b9096d27f6, type: 3}
   playerFootstepPlayer: {fileID: 0}
   zombieFootstepPlayer: {fileID: 0}
-  bgmPlayer: {fileID: 8987724875100007979}
+  bgmPlayer:
+  - {fileID: 8987724875100007979}
   sfxPlayer:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   zombieSfxPlayer:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
 --- !u!1 &8987724875100007978

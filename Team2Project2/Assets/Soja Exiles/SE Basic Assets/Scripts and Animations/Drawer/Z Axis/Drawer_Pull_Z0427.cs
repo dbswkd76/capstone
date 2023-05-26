@@ -8,11 +8,12 @@ public class Drawer_Pull_Z0427: MonoBehaviour {
 	public bool open;
 	public Transform Player;
 	public LockControl3211 _lock;
-    [SerializeField]
+    
     private SoundManager soundManager;
 
     void Start (){
-		open = false;
+        soundManager = SoundManager.instance;
+        open = false;
 		Player = GameObject.FindWithTag("Player").transform;
 	}
 

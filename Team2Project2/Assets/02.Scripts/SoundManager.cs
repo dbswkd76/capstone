@@ -29,7 +29,7 @@ public class SoundManager : MonoBehaviour
     // 재생기 목록
     public AudioSource playerFootstepPlayer = null;
     public AudioSource zombieFootstepPlayer = null;
-    public AudioSource bgmPlayer = null;
+    public AudioSource[] bgmPlayer = null;
     public AudioSource[] sfxPlayer = null;
     public AudioSource[] zombieSfxPlayer = null;
 
@@ -50,7 +50,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        bgmPlayer.loop = true;
+        bgmPlayer[0].loop = true;
     }
 
     // 좀비와 사람 발소리 재생 - 발소리 종류가 다양해서 별도 분리

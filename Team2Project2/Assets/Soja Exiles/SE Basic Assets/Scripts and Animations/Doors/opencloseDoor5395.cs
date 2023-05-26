@@ -10,14 +10,13 @@ public class opencloseDoor5395 : MonoBehaviour
 	public Transform Player;
 	public LockControl5395 _lock;
 
-    [SerializeField]
     private SoundManager soundManager;
 
     void Start()
 	{
 		open = false;
-
-		Player = GameObject.FindWithTag("Player").transform;
+        soundManager = SoundManager.instance;
+        Player = GameObject.FindWithTag("Player").transform;
 
 		if (Player == null)
 		{

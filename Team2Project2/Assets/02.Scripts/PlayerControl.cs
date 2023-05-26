@@ -58,9 +58,9 @@ public class PlayerControl : MonoBehaviour
     private Camera theCamera;
     [SerializeField]
     private ActionController theActionController;
-    [SerializeField]
-    private SoundManager theSoundManager;
+    
 
+    private SoundManager theSoundManager;
     private Rigidbody myRigid;
     private Animator anim;
     private GameObject lowPolyHuman;
@@ -72,6 +72,7 @@ public class PlayerControl : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
         anim = lowPolyHuman.GetComponent<Animator>();
+        theSoundManager = SoundManager.instance;
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;

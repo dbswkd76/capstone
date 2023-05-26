@@ -8,13 +8,12 @@ public class NoPwOpencloseDoorL: MonoBehaviour {
     public Animator openandclose;
     public Transform Player;
 
-    [SerializeField]
     private SoundManager soundManager;
 
     void Start()
     {
         open = false;
-
+        soundManager = SoundManager.instance;
         Player = GameObject.FindWithTag("Player").transform;
         openandclose = GetComponent<Animator>();
 

@@ -25,7 +25,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     private StatusController target;    //타겟 플레이어
     private PlayerControl targetControl; //타겟 플레이어 모션 상태
     private Animator animator;  //NPC 애니메이터
-    [SerializeField]
     private SoundManager soundManager; // 사운드 매니저
     
     public Transform attackRoot;    //NPC 접촉 포인트
@@ -78,6 +77,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     void Awake(){
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
+        soundManager = SoundManager.instance;
         attackDistance += nav.radius;
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }

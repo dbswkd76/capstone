@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerFootstepSound : MonoBehaviour
 {
-    [SerializeField]
     private SoundManager theSoundManager;
 
     // Start is called before the first frame update

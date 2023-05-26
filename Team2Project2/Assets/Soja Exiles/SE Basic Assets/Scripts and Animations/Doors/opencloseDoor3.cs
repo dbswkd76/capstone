@@ -11,13 +11,13 @@ public class opencloseDoor3: MonoBehaviour {
     
 	public KeyControl2 keycon;
 	public bool isLocked1 = true;
-    
-	[SerializeField]
+   
     private SoundManager soundManager;
 
 	void Start (){
 		open = false;
         previousKeycon = true;
+        soundManager = SoundManager.instance;
         Player = GameObject.FindWithTag("Player").transform;
 
 		if (Player == null)

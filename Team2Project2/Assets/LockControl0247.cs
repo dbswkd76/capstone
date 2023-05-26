@@ -6,12 +6,12 @@ public class LockControl0247 : MonoBehaviour
 {
     private int[] result, correctCombination;
     public bool isOpened;
-    
-    [SerializeField]
+
     private SoundManager soundManager;
 
     private void Start()
     {
+        soundManager = SoundManager.instance;
         result = new int[]{0,0,0,0};
         correctCombination = new int[] { 0, 2, 4, 7 };
         isOpened = false;
