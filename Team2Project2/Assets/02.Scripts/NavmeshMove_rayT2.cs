@@ -26,7 +26,11 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     private PlayerControl targetControl; //타겟 플레이어 모션 상태
     private Animator animator;  //NPC 애니메이터
     private SoundManager soundManager; // 사운드 매니저
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     public Transform attackRoot;    //NPC 접촉 포인트
     public Transform eyeTransform;  //NPC 인식 기준 포인트
 
@@ -75,6 +79,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
     #endif
 
     void Awake(){
+        soundManager = SoundManager.instance;
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         soundManager = SoundManager.instance;
@@ -370,7 +375,10 @@ public class NavmeshMove_rayT2 : MonoBehaviour//StatusController//MonoBehaviour
         soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
         new WaitForSeconds(2f); // 애니메이션 재생과 시간 맞추기
         soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
     private void Attack(){
         //Debug.Log("call Attack");

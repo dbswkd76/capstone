@@ -68,6 +68,7 @@ public class PlayerControl : MonoBehaviour
     
     void Start()
     {
+        theSoundManager = SoundManager.instance;
         capsuleCollider = GetComponent<CapsuleCollider>();
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
