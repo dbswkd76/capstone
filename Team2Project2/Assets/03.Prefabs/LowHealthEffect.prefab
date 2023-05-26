@@ -45,4 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shaderControllerScript: {fileID: 0}
+  shaderAccessScript: {fileID: 0}
   nav: {fileID: 0}

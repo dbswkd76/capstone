@@ -1,39 +1,34 @@
-//    ExampleScript - LowHealth
-
-
 using UnityEngine;
 using UnityEngine.AI;
 using Leguar.LowHealth;
 
 namespace LowHP {
-
 	public class LowHealthEffect : MonoBehaviour {
+		public LowHealthController shaderControllerScript;	//정신력 별 시각효과
+		public LowHealthDirectAccess shaderAccessScript;	//피격 시각효과
 
-		// This script is attached to camera in the scene
-		public LowHealthController shaderControllerScript;
-
-		// Keep actual value of player health in own classes
-		// In this example player health is integer between 0 and 100
 		private StatusController player;
 		public NavmeshMove_rayT2 nav;
+
+		//정신력 별 체력효과 필드
 		private int currentPlayerHealth;
+		
+		//피격효과 필드
+		private float takingDamage;
+		private float cameraDizzy;
 
 		void Start() {
-			// Set full health to player
-			//player = GameObject.FindWithTag("Player").GetComponent<StatusController>();
-			//currentPlayerHealth = player.health;
-
-			// By default 'LowHealthController' starts from full health, but no harm to call this is start
 			currentPlayerHealth = 100;
 			shaderControllerScript.SetPlayerHealthInstantly(currentPlayerHealth);
 
+			takingDamage = 0f;
 		}
-
 		void Update(){
-			//Debug.Log("npc attack?: " + nav.isAttack + ", hp: " + player.health);
-			//if(nav.isAttack){	//nav에서 Attack 메소드 호출 시에만
-				//helathChangeByNPC(player.health);
-			//}
+			if(takingDamage > 0f){
+				takingDamage -= Time.deltaTime * 0.5f;
+				shaderAccessScript.SetColorLossEffect(takingDamage, 1f);
+				shaderAccessScript.SetDetailLossEffect(takingDamage * 1f);
+			}
 		}
 		public void helathChangeByNPC(int newPlayerHealth) {
 			Debug.Log("lhe run : " + newPlayerHealth);
@@ -45,9 +40,7 @@ namespace LowHP {
 			currentPlayerHealth = newPlayerHealth;
 
 		}
-
 		private void setNewPlayerHealth(float newPlayerHealthPercent, bool healthGoingDown) {
-			Debug.Log("set: " + newPlayerHealthPercent);
 			shaderControllerScript.SetPlayerHealthSmoothly(newPlayerHealthPercent, 1f);
 			if (healthGoingDown) {
 				Debug.Log("run!");
@@ -62,6 +55,26 @@ namespace LowHP {
 			}
 
 		}
+
+		public void takeDamageByNPC(){
+			takingDamage = 1f;
+			cameraDizzy = 1f;
+		}
+		private float smoothCurve(float time){
+			if(time >= 1f){
+				return 0f;
+			}
+			float t;
+			if(time < 0.1f){
+				t = time * 5f;
+			}
+			else{
+				t = 0.5f + (time - 0.1f) / 0.9f * 0.5f;
+			}
+			float sin = Mathf.Sin(Mathf.PI * t);
+			return sin;
+		}
+
 
 	}
 

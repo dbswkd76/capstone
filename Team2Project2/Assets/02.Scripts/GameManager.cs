@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public static bool isOpenInventory = false;
 
+    public static bool isAttacked = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,12 @@ public class GameManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            canPlayerMove = false;
+        }
+        else if(isAttacked){
+            Debug.Log("cannot move!");
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             canPlayerMove = false;
         }
         else
