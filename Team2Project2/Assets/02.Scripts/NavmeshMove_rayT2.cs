@@ -196,7 +196,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 if(state != State.Tracking){
                     state = State.Tracking;
                     nav.speed = runSpeed;
-                    soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
+                    //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
                 }
                 nav.SetDestination(target.transform.position);
                 //break;
@@ -339,9 +339,9 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         nav.isStopped = true;
         GameManager.isAttacked = true;
         animator.SetTrigger("attack");
-        soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
+        //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
         new WaitForSeconds(2f); // 애니메이션 재생과 시간 맞추기
-        soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
+        //soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
     }
     private void Attack(){
         //메소드 호출 시 NPC상태 변경, 타겟리스트 추가

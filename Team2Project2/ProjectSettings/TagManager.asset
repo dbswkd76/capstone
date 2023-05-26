@@ -13,6 +13,7 @@ TagManager:
   - MovingTemp
   - Furniture
   - Door
+  - NPC
   layers:
   - Default
   - TransparentFX

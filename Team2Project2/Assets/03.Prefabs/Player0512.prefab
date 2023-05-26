@@ -11090,6 +11090,8 @@ GameObject:
   - component: {fileID: 7855934962931561114}
   - component: {fileID: 7855934962931561115}
   - component: {fileID: 1414117577}
+  - component: {fileID: 6326456204404869547}
+  - component: {fileID: 7292059174460663902}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -11324,6 +11326,40 @@ MonoBehaviour:
   stopEffectsWhenZeroHealth: 1
   showInEditor: 1
   simulateHealth: 1
+--- !u!114 &6326456204404869547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379923434937966271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ece0abfccf987f4dabbc26cf1240768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionLossEffect: 0
+  detailLossEffect: 0
+  colorLossEffect: 0
+  colorLossTowardRed: 0
+  doubleVisionEffect: 0
+--- !u!114 &7292059174460663902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379923434937966271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 870b9a8f0f82f4f56800cc427bcd1025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scanLineJitter: 0
+  _verticalJump: 0
+  _horizontalShake: 0
+  _colorDrift: 0
+  _shader: {fileID: 4800000, guid: da33272284ea24f208f36998880990be, type: 3}
 --- !u!1 &7379923434952215351
 GameObject:
   m_ObjectHideFlags: 0
@@ -11391,7 +11427,6 @@ MonoBehaviour:
   walkSpeed: 4
   runSpeed: 6
   crouchSpeed: 1.5
-  holdWallSpeed: 0.5
   jumpForece: 4
   isCrouchToNav: 0
   crouchPosY: 0
@@ -11399,6 +11434,8 @@ MonoBehaviour:
   cameraRotationLimit: 70
   theCamera: {fileID: 7379923434937966245}
   theActionController: {fileID: 7379923434937966265}
+  turnSmoothTime: 0
+  glitchEffect: {fileID: 7292059174460663902}
 --- !u!136 &7379923434952215345
 CapsuleCollider:
   m_ObjectHideFlags: 0
