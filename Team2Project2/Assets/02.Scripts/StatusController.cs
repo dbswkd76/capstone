@@ -68,7 +68,7 @@ public class StatusController : MonoBehaviour{
   }
   void Update(){
     GaugeUpdate();
-    Debug.Log("player health: " + health);
+    //Debug.Log("player health: " + health);
   }
 }
 

@@ -21,6 +21,8 @@ public class ActionController : MonoBehaviour
     private Inventory theInventory;
     [SerializeField]
     private PlayerControl thePlayerControl;
+    //[SerializeField]
+    private SoundManager theSoundManager;
 
 
     private void Start()
@@ -31,6 +33,8 @@ public class ActionController : MonoBehaviour
         selectedWall = null;
         selectedWallParent = null;
         tempWallStorage = GameObject.FindWithTag("MovingTemp");
+
+        theSoundManager = SoundManager.instance;
     }
 
     // Update is called once per frame
@@ -45,22 +49,22 @@ public class ActionController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("E key Pressed");
+            //Debug.Log("E key Pressed");
             ItemPickUp();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Debug.Log("T key Pressed");
+            //Debug.Log("T key Pressed");
             MoveWallActive();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("R key Pressed");
+            //Debug.Log("R key Pressed");
             PutUpWall();
         }
         if (Input.GetKeyUp(KeyCode.R))
         {
-            Debug.Log("R key Released");
+            //Debug.Log("R key Released");
             PutDownWall();
         }
     }
@@ -71,10 +75,17 @@ public class ActionController : MonoBehaviour
     {
         if (raycastInfo.presentObject.CompareTag("Item"))
         {
-            Debug.Log(raycastInfo.presentObject.GetComponent<ItemPickUp>().item.itemName + "획득했습니다");
+            //Debug.Log(raycastInfo.presentObject.GetComponent<ItemPickUp>().item.itemName + "획득했습니다");
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpItem");
             theInventory.AcquireItem(raycastInfo.presentObject.GetComponent<ItemPickUp>().item);
             Destroy(raycastInfo.presentObject);
         }
+    }
+
+    // HammePickUp
+    private void HammerPickUp()
+    {
+        theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpHammer");
     }
 
 
@@ -82,21 +93,23 @@ public class ActionController : MonoBehaviour
     private void MoveWallActive()
     {
         isMoveWallActivated = !isMoveWallActivated;
-        Debug.Log("isMoveWallActivated : " + isMoveWallActivated);
+        //Debug.Log("isMoveWallActivated : " + isMoveWallActivated);
     }
 
 
     private void PutUpWall()
     {
-        Debug.Log("문 들어올림 시도");
+        //Debug.Log("문 들어올림 시도");
 
         if (isMoveWallActivated)
         {
-            Debug.Log("present obj=" + raycastInfo.presentObject + ", tag=" + raycastInfo.presentObject.tag);
+            //Debug.Log("present obj=" + raycastInfo.presentObject + ", tag=" + raycastInfo.presentObject.tag);
             // 현재 오브젝트 들어올리기
             if (raycastInfo.presentObject.CompareTag("MovingWall"))
             {
                 isMovingWall = true;
+
+                theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PutUpWall");
 
                 previousSpeed = thePlayerControl.applySpeed;
                 thePlayerControl.applySpeed = 0.5f;
@@ -107,7 +120,7 @@ public class ActionController : MonoBehaviour
                 selectedWallChildren = selectedWall.GetComponentsInChildren<Transform>();
                 foreach(Transform child in selectedWallChildren)
                 {
-                    Debug.Log("selectedWall의 자식 : " + child.gameObject.name);
+                    //Debug.Log("selectedWall의 자식 : " + child.gameObject.name);
                     if(child.GetComponent<Collider>() == null)
                     {
                         child.gameObject.AddComponent<BoxCollider>();
@@ -116,17 +129,19 @@ public class ActionController : MonoBehaviour
                 }
 
                 selectedWall.transform.SetParent(tempWallStorage.transform);
-                Debug.Log("문 들어올림 성공");
+                //Debug.Log("문 들어올림 성공");
             }
         }
     }
 
     private void PutDownWall()
     {
-        Debug.Log("문 내림 시도");
+        //Debug.Log("문 내림 시도");
 
         if (isMovingWall)
         {
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PutDownWall");
+
             selectedWall.transform.SetParent(selectedWallParent.transform);
             
             foreach (Transform child in selectedWallChildren)
@@ -136,7 +151,7 @@ public class ActionController : MonoBehaviour
 
             isMovingWall = false;
             thePlayerControl.applySpeed = previousSpeed;
-            Debug.Log("문 내림 성공");
+            //Debug.Log("문 내림 성공");
         }
     }
 }

@@ -5,17 +5,7 @@ using UnityEngine;
 public class KeyControl : MonoBehaviour
 {
     public bool isLocked = true;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-       
-    }
     private void OnDisable()
     {
         isLocked = false;

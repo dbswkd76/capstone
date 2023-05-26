@@ -6,8 +6,12 @@ public class LockControl5395 : MonoBehaviour
 {
     private int[] result, correctCombination;
     public bool isOpened;
+
+    private SoundManager soundManager;
+
     private void Start()
     {
+        soundManager = SoundManager.instance;
         result = new int[]{0,0,0,0};
         correctCombination = new int[] { 5, 3, 9, 5 };
         isOpened = false;
@@ -40,6 +44,7 @@ public class LockControl5395 : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.06f, transform.position.z);
             isOpened = true;
+            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockOpen");
         }
     }
 

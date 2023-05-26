@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Kino;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -10,7 +9,8 @@ public class PlayerControl : MonoBehaviour
     public float applySpeed {
         get { return playerSpeed; }
         set {
-            playerSpeed = theActionController.isMovingWall ? 0.5f : value;
+            playerSpeed = theActionController.isMovingWall ? holdWallSpeed : value;
+            anim.SetFloat("speed", holdWallSpeed / walkSpeed);
         }
     }
 
@@ -21,6 +21,8 @@ public class PlayerControl : MonoBehaviour
     private float runSpeed;
     [SerializeField]
     private float crouchSpeed;
+    [SerializeField]
+    private float holdWallSpeed;
 
     // JumpForce
     [SerializeField]
@@ -56,47 +58,37 @@ public class PlayerControl : MonoBehaviour
     private Camera theCamera;
     [SerializeField]
     private ActionController theActionController;
+    
 
+    private SoundManager theSoundManager;
     private Rigidbody myRigid;
     private Animator anim;
     private GameObject lowPolyHuman;
 
-    //for NPC Zoom in/out effect
-    private Camera playerCamera;
-    private float playerFov;
-    private GameObject npc;
-    private float turnSmoothVelocity;
-    [Range(0.01f, 2f)] public float turnSmoothTime;
-
-    //NPC nearby effect
-    public AnalogGlitch glitchEffect;
-    private float intensity = 0.5f;
-
+    
     void Start()
     {
+        theSoundManager = SoundManager.instance;
         capsuleCollider = GetComponent<CapsuleCollider>();
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
         anim = lowPolyHuman.GetComponent<Animator>();
+        theSoundManager = SoundManager.instance;
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
-
-        playerFov = 0f;
+        anim.SetFloat("speed", 1);
     }
 
     // 0.02초마다 한 번씩 실행
     void FixedUpdate()
     {
-        if(!GameManager.isAttacked){
-            Move();
-        }
+        Move();
     }
 
     // Called once per frame
     void Update()
-    {   
-        theCamera.fieldOfView = 60f;
+    {
         if (GameManager.canPlayerMove)
         {
             IsGround();
@@ -109,9 +101,6 @@ public class PlayerControl : MonoBehaviour
                 CameraRotation();
                 CharacterRotation();
             }
-        }
-        else{   //isAttacked
-            isAttackedFov();
         }
     }
    
@@ -130,12 +119,14 @@ public class PlayerControl : MonoBehaviour
         if (isCrouch)
         {
             anim.SetBool("isCrouch", true);
+            theSoundManager.playerFootstepPlayer.mute = true;
             applySpeed = crouchSpeed;
             applyCrouchPosY = crouchPosY;
         }
         else
         {
             anim.SetBool("isCrouch", false);
+            theSoundManager.playerFootstepPlayer.mute = false;
             applySpeed = walkSpeed;
             applyCrouchPosY = originPosY;
         }
@@ -179,6 +170,7 @@ public class PlayerControl : MonoBehaviour
         if (isCrouch)
             Crouch();
         anim.SetTrigger("jump");
+        theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PlayerJump");
         myRigid.velocity = transform.up * jumpForece;
     }
 
@@ -202,12 +194,14 @@ public class PlayerControl : MonoBehaviour
 
         isRun = true;
         applySpeed = runSpeed;
+        anim.SetFloat("speed", runSpeed / walkSpeed);
     }
 
     private void RunningCancel()
     {
         isRun = false;
         applySpeed = walkSpeed;
+        anim.SetFloat("speed", 1);
     }
 
     private void Move()
@@ -249,35 +243,5 @@ public class PlayerControl : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-    }
-    
-    public void isAttackedFov(){
-        Debug.Log("force to see NPC");
-        //GameManager.canPlayerMove = false;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
-        foreach(var colider in colliders){
-            if(colider.tag == "NPC"){
-                npc = colider.gameObject;
-                break;
-            }
-        }
-        Debug.Log("npc name: " + npc.name);
-
-        theCamera.fieldOfView = 30f;
-        var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);
-        var targetAngleY = lookRotation.eulerAngles.y;
-        transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-        theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-    }
-    private void OnTriggerStay(Collider collider){
-        if(collider.tag == "NPC"){
-            Vector3 distance = transform.position - collider.transform.position;
-            glitchEffect.scanLineJitter = intensity / distance.magnitude;
-        }
-    }
-    private void OnTriggerExit(Collider collider){
-        if(collider.tag == "NPC"){
-            glitchEffect.scanLineJitter = 0f;
-        }
     }
 }
