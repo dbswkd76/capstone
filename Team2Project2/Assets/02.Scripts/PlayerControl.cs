@@ -10,7 +10,15 @@ public class PlayerControl : MonoBehaviour
     public float applySpeed {
         get { return playerSpeed; }
         set {
-            playerSpeed = theActionController.isMovingWall ? 0.5f : value;
+            if (theActionController.isMovingWall)
+            {
+                playerSpeed = 0.5f;
+                anim.SetFloat("speed", 0.125f);
+            }
+            else
+            {
+                playerSpeed = value;
+            }
         }
     }
 
@@ -80,6 +88,7 @@ public class PlayerControl : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
         anim = lowPolyHuman.GetComponent<Animator>();
+        anim.SetFloat("speed", 1f);
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
@@ -116,7 +125,9 @@ public class PlayerControl : MonoBehaviour
             isAttackedFov();
         }
     }
-   
+
+    
+
     private void TryCrouch()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -141,29 +152,13 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("isCrouch", false);
             theSoundManager.playerFootstepPlayer.mute = false;
             applySpeed = walkSpeed;
+            anim.SetFloat("speed", 1f);
             applyCrouchPosY = originPosY;
         }
         isCrouchToNav = isCrouch;   //NPC 처리용
         StartCoroutine(CrouchCoroutine());
     }
 
-    // For smooth camera movement
-    IEnumerator CrouchCoroutine()
-    {
-        float _posY = theCamera.transform.localPosition.y;
-        int count = 0;
-
-        while (_posY != applyCrouchPosY)
-        {
-            count++;
-            _posY = Mathf.Lerp(_posY, applyCrouchPosY, 0.3f);
-            theCamera.transform.localPosition = new Vector3(0, _posY, 0);
-            if (count > 15)
-                break;
-            yield return null;
-        }
-        theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
-    }
 
     private void IsGround()
     {
@@ -207,12 +202,14 @@ public class PlayerControl : MonoBehaviour
 
         isRun = true;
         applySpeed = runSpeed;
+        anim.SetFloat("speed", runSpeed/walkSpeed);
     }
 
     private void RunningCancel()
     {
         isRun = false;
         applySpeed = walkSpeed;
+        anim.SetFloat("speed", 1f);
     }
 
     private void Move()
@@ -243,6 +240,24 @@ public class PlayerControl : MonoBehaviour
         float _yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
         myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
+    }
+
+    // For smooth camera movement
+    IEnumerator CrouchCoroutine()
+    {
+        float _posY = theCamera.transform.localPosition.y;
+        int count = 0;
+
+        while (_posY != applyCrouchPosY)
+        {
+            count++;
+            _posY = Mathf.Lerp(_posY, applyCrouchPosY, 0.3f);
+            theCamera.transform.localPosition = new Vector3(0, _posY, 0);
+            if (count > 15)
+                break;
+            yield return null;
+        }
+        theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
     }
 
     private void CameraRotation()

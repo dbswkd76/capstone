@@ -11343,6 +11343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMovingWall: 0
   isMoveWallActivated: 0
+  hammer: {fileID: 0}
   raycastInfo: {fileID: 7855934962931561114}
   theInventory: {fileID: 0}
   thePlayerControl: {fileID: 7379923434952215344}
@@ -11378,6 +11379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183e38e563f8ea45b8ed22d84bb00d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hammer: {fileID: 0}
   actionText: {fileID: 7379923433736180178}
   raycastInfo: {fileID: 7855934962931561114}
   actionController: {fileID: 7379923434937966265}
