@@ -7,7 +7,9 @@ using UnityEngine;
 public class InformationController : MonoBehaviour
 {
     private bool isInfoControl;
-
+    
+    [SerializeField]
+    private GameObject hammer;
     [SerializeField]
     private Text actionText;
     [SerializeField]
@@ -57,6 +59,7 @@ public class InformationController : MonoBehaviour
         }
     }
 
+
     // 정보 UI 및 외곽선 제어
     private void InfoControl()
     {
@@ -78,7 +81,7 @@ public class InformationController : MonoBehaviour
             case "MovingWall":
                 if (actionController.isMoveWallActivated)
                 {
-                    InfoAppear("옮기기" + "<color=yellow>" + " (R)" + "</color>");
+                    InfoAppear("옮기기" + "<color=yellow>" + " (R)" + "</color>" +"\n" + "남은 횟수 " + hammer.GetComponent<Hammer>().useCount + "회");
                     OutlineAppear(raycastInfo.presentObject, Color.green, 10.0f);
                 }
                 break;
@@ -97,6 +100,11 @@ public class InformationController : MonoBehaviour
                     InfoAppear("내려놓기");
                     OutlineAppear(raycastInfo.presentObject, Color.red, 10.0f);
                 }
+                break;
+
+            case "Hammer":
+                InfoAppear("줍기" + "<color=yellow>" + " (E)" + "</color>");
+                OutlineAppear(raycastInfo.presentObject, Color.yellow, 10.0f);
                 break;
 
             case "Player":

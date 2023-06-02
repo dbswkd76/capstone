@@ -7,7 +7,7 @@ public class ActionController : MonoBehaviour
 {
     public bool isMovingWall;
     public bool isMoveWallActivated;
-
+ 
     private Transform[] selectedWallChildren;
 
     private float previousSpeed;
@@ -16,14 +16,16 @@ public class ActionController : MonoBehaviour
     private GameObject tempWallStorage;
 
     [SerializeField]
+    private GameObject hammer; // 플레이어가 들고있는 해머
+    [SerializeField]
     private RaycastInfo raycastInfo;
     [SerializeField]
     private Inventory theInventory;
     [SerializeField]
     private PlayerControl thePlayerControl;
-    //[SerializeField]
-    private SoundManager theSoundManager;
 
+    private SoundManager theSoundManager;
+    private Hammer theHammer;
 
     private void Start()
     {
@@ -35,12 +37,13 @@ public class ActionController : MonoBehaviour
         tempWallStorage = GameObject.FindWithTag("MovingTemp");
 
         theSoundManager = SoundManager.instance;
+        theHammer = hammer.GetComponent<Hammer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckKeyInput(); 
+        CheckKeyInput();
     }
 
 
@@ -51,11 +54,7 @@ public class ActionController : MonoBehaviour
         {
             //Debug.Log("E key Pressed");
             ItemPickUp();
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            //Debug.Log("T key Pressed");
-            MoveWallActive();
+            HammerPickUp();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -85,11 +84,28 @@ public class ActionController : MonoBehaviour
     // HammePickUp
     private void HammerPickUp()
     {
-        theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpHammer");
+        if (raycastInfo.presentObject.CompareTag("Hammer"))
+        {
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpItem");
+            hammer.SetActive(true);
+            MoveWallActive();
+            Destroy(raycastInfo.presentObject);
+        }
     }
 
+    // 사용 횟수를 초과한 해머 오브젝트 파괴
+    private void CheckAndDestroyHammer()
+    {
+        --theHammer.useCount;
+        if(theHammer.useCount <= 0)
+        {
+            MoveWallActive();
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "DestroyHammer");
+            Destroy(hammer);
+        }
+    }
 
-    // T 버튼을 사용하여 벽 옮기기 기능 활성화/비활성화
+    // 벽 옮기기 기능 활성화/비활성화
     private void MoveWallActive()
     {
         isMoveWallActivated = !isMoveWallActivated;
@@ -108,6 +124,7 @@ public class ActionController : MonoBehaviour
             if (raycastInfo.presentObject.CompareTag("MovingWall"))
             {
                 isMovingWall = true;
+                theHammer.HammerUP();
 
                 theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PutUpWall");
 
@@ -118,10 +135,10 @@ public class ActionController : MonoBehaviour
                 selectedWallParent = raycastInfo.presentObjectParent;
 
                 selectedWallChildren = selectedWall.GetComponentsInChildren<Transform>();
-                foreach(Transform child in selectedWallChildren)
+                foreach (Transform child in selectedWallChildren)
                 {
                     //Debug.Log("selectedWall의 자식 : " + child.gameObject.name);
-                    if(child.GetComponent<Collider>() == null)
+                    if (child.GetComponent<Collider>() == null)
                     {
                         child.gameObject.AddComponent<BoxCollider>();
                     }
@@ -140,15 +157,18 @@ public class ActionController : MonoBehaviour
 
         if (isMovingWall)
         {
+            theHammer.HammerDown();
+
             theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PutDownWall");
 
             selectedWall.transform.SetParent(selectedWallParent.transform);
-            
+
             foreach (Transform child in selectedWallChildren)
             {
                 child.GetComponent<Collider>().isTrigger = false;
             }
 
+            CheckAndDestroyHammer();
             isMovingWall = false;
             thePlayerControl.applySpeed = previousSpeed;
             //Debug.Log("문 내림 성공");

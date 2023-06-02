@@ -50,6 +50,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
+        instance.PlaySound(bgmPlayer, bgm, "LightBlink");
         bgmPlayer[0].loop = true;
     }
 
