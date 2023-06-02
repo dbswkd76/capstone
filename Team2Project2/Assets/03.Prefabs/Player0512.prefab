@@ -9929,13 +9929,14 @@ GameObject:
   - component: {fileID: 7365880919620551257}
   - component: {fileID: 1973661942828546159}
   - component: {fileID: 5214977602385298582}
+  - component: {fileID: 1894438312}
   m_Layer: 0
-  m_Name: urethane_hammer
-  m_TagString: Untagged
+  m_Name: UrethaneHammerHold
+  m_TagString: Hammer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7365880919620551257
 Transform:
   m_ObjectHideFlags: 0
@@ -9949,7 +9950,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7379923434937966270}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -25.126, y: 123.717, z: 90}
 --- !u!33 &1973661942828546159
 MeshFilter:
@@ -10001,6 +10002,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1894438312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792619177203822666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4711dd5713aa6364997d7a8ea2850c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCount: 3
 --- !u!1 &5825252485701185097
 GameObject:
   m_ObjectHideFlags: 0
@@ -11196,8 +11210,8 @@ Transform:
   m_Children:
   - {fileID: 7379923434730448966}
   - {fileID: 4972800093427336225}
-  - {fileID: 7365880919620551257}
   - {fileID: 7855934961677717579}
+  - {fileID: 7365880919620551257}
   m_Father: {fileID: 8995002139334692467}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11343,7 +11357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMovingWall: 0
   isMoveWallActivated: 0
-  hammer: {fileID: 0}
+  hammer: {fileID: 5792619177203822666}
   raycastInfo: {fileID: 7855934962931561114}
   theInventory: {fileID: 0}
   thePlayerControl: {fileID: 7379923434952215344}
@@ -11379,7 +11393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183e38e563f8ea45b8ed22d84bb00d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hammer: {fileID: 0}
+  hammer: {fileID: 5792619177203822666}
   actionText: {fileID: 7379923433736180178}
   raycastInfo: {fileID: 7855934962931561114}
   actionController: {fileID: 7379923434937966265}
@@ -11737,7 +11751,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7379923434937966270}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7876622285369974025
 GameObject:

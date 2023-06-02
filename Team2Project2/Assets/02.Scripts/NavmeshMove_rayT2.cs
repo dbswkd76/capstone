@@ -77,20 +77,29 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         StartCoroutine(UpdatePath());
     }
     void Awake(){
-        soundManager = SoundManager.instance;
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         attackDistance += nav.radius;
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }
+
+    private void Start()
+    {
+        soundManager = SoundManager.instance;
+    }
+
     void Update()
     {
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
+            soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
             ////Debug.Log("ready to attack!");
             //BeginAttack();
-            if(nav.isStopped == false){
+            if (nav.isStopped == false){
                 //Debug.Log("ready to attack!");
+                soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
                 BeginAttack();
+                new WaitForSeconds(1f); // 애니메이션 재생과 시간 맞추기
+                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
             }
         }
         animator.SetFloat("speed", nav.desiredVelocity.magnitude);
@@ -196,7 +205,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 if(state != State.Tracking){
                     state = State.Tracking;
                     nav.speed = runSpeed;
-                    //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
                 }
                 nav.SetDestination(target.transform.position);
                 //break;
@@ -339,9 +347,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         nav.isStopped = true;
         GameManager.isAttacked = true;
         animator.SetTrigger("attack");
-        //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
-        new WaitForSeconds(2f); // 애니메이션 재생과 시간 맞추기
-        //soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
     }
     private void Attack(){
         //메소드 호출 시 NPC상태 변경, 타겟리스트 추가

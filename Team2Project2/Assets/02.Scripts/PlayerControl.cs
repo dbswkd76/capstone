@@ -81,6 +81,8 @@ public class PlayerControl : MonoBehaviour
     public AnalogGlitch glitchEffect;
     private float intensity = 0.5f;
 
+
+    //********** Frame Call **********//
     void Start()
     {
         theSoundManager = SoundManager.instance;
@@ -92,7 +94,6 @@ public class PlayerControl : MonoBehaviour
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
-
         playerFov = 0f;
     }
 
@@ -126,8 +127,8 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    
 
+    //********** Action **********//
     private void TryCrouch()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -158,7 +159,6 @@ public class PlayerControl : MonoBehaviour
         isCrouchToNav = isCrouch;   //NPC 처리용
         StartCoroutine(CrouchCoroutine());
     }
-
 
     private void IsGround()
     {
@@ -242,6 +242,8 @@ public class PlayerControl : MonoBehaviour
         myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
     }
 
+
+    //********** Camera **********//
     // For smooth camera movement
     IEnumerator CrouchCoroutine()
     {
@@ -270,9 +272,10 @@ public class PlayerControl : MonoBehaviour
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
-    
+
+    //********** Attacked **********//
     public void isAttackedFov(){
-        Debug.Log("force to see NPC");
+        //Debug.Log("force to see NPC");
         //GameManager.canPlayerMove = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
         foreach(var colider in colliders){
@@ -281,7 +284,7 @@ public class PlayerControl : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("npc name: " + npc.name);
+        //Debug.Log("npc name: " + npc.name);
 
         theCamera.fieldOfView = 30f;
         var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);

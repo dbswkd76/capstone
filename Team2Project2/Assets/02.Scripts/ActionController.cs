@@ -86,7 +86,7 @@ public class ActionController : MonoBehaviour
     {
         if (raycastInfo.presentObject.CompareTag("Hammer"))
         {
-            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpHammer");
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PickUpItem");
             hammer.SetActive(true);
             MoveWallActive();
             Destroy(raycastInfo.presentObject);
@@ -100,6 +100,7 @@ public class ActionController : MonoBehaviour
         if(theHammer.useCount <= 0)
         {
             MoveWallActive();
+            theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "DestroyHammer");
             Destroy(hammer);
         }
     }
