@@ -66,6 +66,7 @@ public class PlayerControl : MonoBehaviour
     private Camera playerCamera;
     private float playerFov;
     private GameObject npc;
+    private GameObject npcEye;
     private float turnSmoothVelocity;
     [Range(0.01f, 2f)] public float turnSmoothTime;
 
@@ -268,11 +269,15 @@ public class PlayerControl : MonoBehaviour
         }
         Debug.Log("npc name: " + npc.name);
 
+        npcEye = npc.transform.GetChild(0).gameObject;
         theCamera.fieldOfView = 30f;
         var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);
+        var targetAngleX = lookRotation.eulerAngles.x;
         var targetAngleY = lookRotation.eulerAngles.y;
         transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-        theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+        //theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+        //theCamera.transform.eulerAngles = Vector3.one * Mathf.SmoothDampAngle(transform.eulerAngles.x, targetAngleX, ref turnSmoothVelocity, turnSmoothTime);
+        theCamera.transform.LookAt(npcEye.transform);
     }
     private void OnTriggerStay(Collider collider){
         if(collider.tag == "NPC"){

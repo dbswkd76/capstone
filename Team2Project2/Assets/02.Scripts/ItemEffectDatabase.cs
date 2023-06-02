@@ -42,10 +42,9 @@ public class ItemEffectDatabase : MonoBehaviour
 
         if (_item.itemType == Item.ItemType.Tool)
         {
-
             for (int x = 0; x < itemEffects.Length; x++)
             {
-
+                Debug.Log(itemEffects[x].itemName + ", " + _item.itemName);
                 if (itemEffects[x].itemName == _item.itemName)
                 {
 
@@ -55,6 +54,7 @@ public class ItemEffectDatabase : MonoBehaviour
                         switch (itemEffects[x].part[y])
                         {
                             case HP:
+                            Debug.Log("hp test : " + itemEffects[x].num[y]);
                                 //thePlayerStatus.IncreaseHP(itemEffects[x].num[y]);
                                 thePlayerStatus.healingHealth(itemEffects[x].num[y]);
                                 break;
@@ -68,8 +68,6 @@ public class ItemEffectDatabase : MonoBehaviour
                                 break;
                         }
                         Debug.Log(_item.itemName + " 을 사용했습니다");
-                       
-
                     }
                     return;
                 }

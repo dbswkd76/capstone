@@ -39,7 +39,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
 
     //NPC 회전딜레이
     private float turnSmoothVelocity;
-    [Range(0.01f, 2f)] public float turnSmoothTime = 0.1f;
+    [Range(0.01f, 2f)] public float turnSmoothTime = 0.01f;
 
     private RaycastHit[] hits = new RaycastHit[10]; //Ray 범위
     private List<StatusController> lastTargets = new List<StatusController>();
@@ -64,8 +64,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         var leftRayDirection = leftRayRotation * transform.forward;
         Handles.color = new Color(1f, 1f, 1f, 0.2f);
         Handles.DrawSolidArc(eyeTransform.position, Vector3.up, leftRayDirection, fov, viewDistance);
-
-
     }
     #endif
 
@@ -74,15 +72,21 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         runSpeed = npcData.runSpeed;
         patrolSpeed = npcData.patrolSpeed;
         navFloor = npcData.navFloor;
-        StartCoroutine(UpdatePath());
-    }
-    void Awake(){
+        
         soundManager = SoundManager.instance;
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         attackDistance += nav.radius;
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
+        StartCoroutine(UpdatePath());
     }
+    /*void Awake(){
+        soundManager = SoundManager.instance;
+        animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
+        nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
+        attackDistance += nav.radius;
+        //nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
+    }*/
     void Update()
     {
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
@@ -109,7 +113,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 }
             }
         }
-        //Debug.Log("time: " + timer);
+        //Debug.Log("Not Found Timer: " + timer);
         Debug.Log(state);
         //Debug.Log(hasTarget + ", " + nav.destination);
         //Debug.Log("path " + nav.hasPath + ", To: " + nav.destination);
@@ -120,16 +124,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
 
     }
     private void FixedUpdate(){
-        /*if(target == null || target.dead){  //target null 임시 해결
-            Debug.Log("return " + hasTarget);
-            state = State.Patrol;
-            nav.isStopped = false;
-            //return;
-        }*/
-        /*if(!hasTarget || target.dead){
-            Debug.Log("no!");
-            return;
-        }*/
         if(hasTarget && state == State.AttackBegin || state == State.Attacking){ //상태가 공격 관련 상태일 때
             var lookRotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var targetAngleY = lookRotation.eulerAngles.y;
@@ -160,7 +154,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                    
                     attackTargetObj.OnDamage(message);
                     lastTargets.Add(attackTargetObj);
-                    //lastTargets.Clear();
                     break;
                 }
 
@@ -172,7 +165,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
             if(target != null && !target.dead){ //타겟이 없지 않고 타겟이 죽지 않았으면
                 return true;
             }
-            
             return false;
         }
     }
@@ -186,10 +178,10 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 Debug.Log("target sitted down");
                 target = null;
             }
-            else if(hasTarget && IsTargetCrouch(target.GetComponent<Collider>()) && !IsTargetOnSight(target.transform.position)){   //타겟이 서있고 레이에 없으면
+            /*else if(hasTarget && IsTargetCrouch(target.GetComponent<Collider>()) && !IsTargetOnSight(target.transform.position)){   //타겟이 서있고 레이에 없으면
                 Debug.Log("target not sitted down, but no ray");
                 target = null;
-            }
+            }*/
 
             if(hasTarget){  //타겟 존재
                 Debug.Log("코루틴 1st");
@@ -206,7 +198,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                     state = State.Patrol;
                     nav.speed = patrolSpeed;
                 }
-                var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);
+                //var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);
                 Collider[] colliders = Physics.OverlapSphere(eyeTransform.position, viewDistance, targetLayer);
                 Debug.Log("colider length: " + colliders.Length);
                 if(colliders.Length == 0){  //인식된 콜라이더 없을 때
@@ -214,8 +206,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                     //nav.SetDestination(patrolPosition);
                     if(nav.remainingDistance <= 2f || nav.hasPath == false){    //목표지점까지의 거리, 네비게이션 경로 조건
                         Debug.Log("random point update!");
-                        patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
-                        targetPoint = patrolPosition;       
+                        var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
+                        targetPoint = patrolPosition;
                         nav.SetDestination(patrolPosition); //목표 재설정
                     }
                     //nav.SetDestination(patrolPosition); //목표 재설정
@@ -237,12 +229,13 @@ public class NavmeshMove_rayT2 : MonoBehaviour
 
                             if(nav.remainingDistance <= 2f || nav.hasPath == false){    //목표지점까지의 거리, 네비게이션 경로 조건
                                 Debug.Log("random point update!");
-                                patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
+                                var patrolPosition = GetRandomPointOnNavMesh(transform.position, 10f, navFloor, NavMesh.AllAreas);    //업데이트
                                 targetPoint = patrolPosition;       
                                 nav.SetDestination(patrolPosition); //목표 재설정
+                                break;
                             }
                             //continue;   //패스
-                            break;
+                            //break;
                         }
                         //콜라이더 인식, ray 보일 때
                         //var targetPlayer = colider.GetComponent<StatusController>();
@@ -253,7 +246,6 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                         }
                     }
                 }
-
             }
             yield return new WaitForSeconds(0.05f);
         }
@@ -271,7 +263,11 @@ public class NavmeshMove_rayT2 : MonoBehaviour
             //2층 해당 좌표: < 11, > 6
             //1층 해당 좌표: < 6
             //navFloor 변수 값 기준으로 sampleposition y값이
-            if(floor >= 11){    //3층 NPC일 때  11.17
+            if(floor == 0){
+                Debug.Log("All floor");
+                return hit.position;
+            }
+            else if(floor >= 11){    //3층 NPC일 때  11.17
                 if(hit.position.y >= 11){    //랜덤값 y좌표가 3층이면
                     Debug.Log("3rd floor");
                     //break;
