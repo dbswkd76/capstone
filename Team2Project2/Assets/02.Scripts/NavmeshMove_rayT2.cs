@@ -83,6 +83,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }
 
+    // 추가!
     private void Start()
     {
         soundManager = SoundManager.instance;
@@ -91,11 +92,13 @@ public class NavmeshMove_rayT2 : MonoBehaviour
     void Update()
     {
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
+            // 추가!
             soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
             ////Debug.Log("ready to attack!");
             //BeginAttack();
             if (nav.isStopped == false){
                 //Debug.Log("ready to attack!");
+                // 추가!
                 soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
                 BeginAttack();
                 new WaitForSeconds(1f); // 애니메이션 재생과 시간 맞추기
