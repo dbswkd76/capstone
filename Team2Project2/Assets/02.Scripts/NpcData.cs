@@ -10,3 +10,5 @@ public class NpcData : ScriptableObject
   public float patrolSpeed; //기본 속도
   public float navFloor;    //층 제한
 }
+
+

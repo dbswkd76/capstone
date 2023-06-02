@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e0f4713d990416a8397b92edcb701f, type: 3}
   m_Name: 2F NPC
   m_EditorClassIdentifier: 
-  attackPower: 0
+  attackPower: 30
+  runSpeed: 2
+  patrolSpeed: 1
+  navFloor: 7

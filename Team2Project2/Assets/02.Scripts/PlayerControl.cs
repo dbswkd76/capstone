@@ -10,13 +10,11 @@ public class PlayerControl : MonoBehaviour
     public float applySpeed {
         get { return playerSpeed; }
         set {
-            if (theActionController.isMovingWall)
-            {
+            if(theActionController.isMovingWall){
                 playerSpeed = 0.5f;
-                anim.SetFloat("speed", 0.125f); // 추가!
+                anim.SetFloat("speed", 0.125f);
             }
-            else
-            {
+            else{
                 playerSpeed = value;
             }
         }
@@ -74,6 +72,7 @@ public class PlayerControl : MonoBehaviour
     private Camera playerCamera;
     private float playerFov;
     private GameObject npc;
+    private GameObject npcEye;
     private float turnSmoothVelocity;
     [Range(0.01f, 2f)] public float turnSmoothTime;
 
@@ -81,8 +80,6 @@ public class PlayerControl : MonoBehaviour
     public AnalogGlitch glitchEffect;
     private float intensity = 0.5f;
 
-
-    //********** Frame Call **********//
     void Start()
     {
         theSoundManager = SoundManager.instance;
@@ -90,7 +87,7 @@ public class PlayerControl : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
         anim = lowPolyHuman.GetComponent<Animator>();
-        anim.SetFloat("speed", 1f); // 추가!
+        anim.SetFloat("speed", 1f);
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
@@ -126,9 +123,7 @@ public class PlayerControl : MonoBehaviour
             isAttackedFov();
         }
     }
-
-
-    //********** Action **********//
+   
     private void TryCrouch()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -153,11 +148,29 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("isCrouch", false);
             theSoundManager.playerFootstepPlayer.mute = false;
             applySpeed = walkSpeed;
-            anim.SetFloat("speed", 1f); // 추가!
+            anim.SetFloat("speed", 1f);
             applyCrouchPosY = originPosY;
         }
         isCrouchToNav = isCrouch;   //NPC 처리용
         StartCoroutine(CrouchCoroutine());
+    }
+
+    // For smooth camera movement
+    IEnumerator CrouchCoroutine()
+    {
+        float _posY = theCamera.transform.localPosition.y;
+        int count = 0;
+
+        while (_posY != applyCrouchPosY)
+        {
+            count++;
+            _posY = Mathf.Lerp(_posY, applyCrouchPosY, 0.3f);
+            theCamera.transform.localPosition = new Vector3(0, _posY, 0);
+            if (count > 15)
+                break;
+            yield return null;
+        }
+        theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
     }
 
     private void IsGround()
@@ -202,14 +215,14 @@ public class PlayerControl : MonoBehaviour
 
         isRun = true;
         applySpeed = runSpeed;
-        anim.SetFloat("speed", runSpeed/walkSpeed); // 추가!
+        anim.SetFloat("speed", runSpeed / walkSpeed);
     }
 
     private void RunningCancel()
     {
         isRun = false;
         applySpeed = walkSpeed;
-        anim.SetFloat("speed", 1f); // 추가!
+        anim.SetFloat("speed", 1f);
     }
 
     private void Move()
@@ -242,26 +255,6 @@ public class PlayerControl : MonoBehaviour
         myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
     }
 
-
-    //********** Camera **********//
-    // For smooth camera movement
-    IEnumerator CrouchCoroutine()
-    {
-        float _posY = theCamera.transform.localPosition.y;
-        int count = 0;
-
-        while (_posY != applyCrouchPosY)
-        {
-            count++;
-            _posY = Mathf.Lerp(_posY, applyCrouchPosY, 0.3f);
-            theCamera.transform.localPosition = new Vector3(0, _posY, 0);
-            if (count > 15)
-                break;
-            yield return null;
-        }
-        theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
-    }
-
     private void CameraRotation()
 
     {
@@ -272,10 +265,9 @@ public class PlayerControl : MonoBehaviour
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
-
-    //********** Attacked **********//
+    
     public void isAttackedFov(){
-        //Debug.Log("force to see NPC");
+        Debug.Log("force to see NPC");
         //GameManager.canPlayerMove = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
         foreach(var colider in colliders){
@@ -284,13 +276,17 @@ public class PlayerControl : MonoBehaviour
                 break;
             }
         }
-        //Debug.Log("npc name: " + npc.name);
+        Debug.Log("npc name: " + npc.name);
 
+        npcEye = npc.transform.GetChild(0).gameObject;
         theCamera.fieldOfView = 30f;
         var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);
+        var targetAngleX = lookRotation.eulerAngles.x;
         var targetAngleY = lookRotation.eulerAngles.y;
         transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-        theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+        //theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
+        //theCamera.transform.eulerAngles = Vector3.one * Mathf.SmoothDampAngle(transform.eulerAngles.x, targetAngleX, ref turnSmoothVelocity, turnSmoothTime);
+        theCamera.transform.LookAt(npcEye.transform);
     }
     private void OnTriggerStay(Collider collider){
         if(collider.tag == "NPC"){
