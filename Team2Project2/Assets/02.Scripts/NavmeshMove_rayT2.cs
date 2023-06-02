@@ -72,8 +72,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         runSpeed = npcData.runSpeed;
         patrolSpeed = npcData.patrolSpeed;
         navFloor = npcData.navFloor;
-        
-        soundManager = SoundManager.instance;
+
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         attackDistance += nav.radius;
@@ -87,14 +86,20 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         attackDistance += nav.radius;
         //nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }*/
+    private void Start(){
+        soundManager = SoundManager.instance;
+    }
+
     void Update()
     {
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
-            //Debug.Log("ready to attack!");
-            //BeginAttack();
+            soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
             if(nav.isStopped == false){
                 Debug.Log("ready to attack!");
+                soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
                 BeginAttack();
+                new WaitForSeconds(1f);
+                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
             }
         }
         animator.SetFloat("speed", nav.desiredVelocity.magnitude);
@@ -188,10 +193,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 if(state != State.Tracking){
                     state = State.Tracking;
                     nav.speed = runSpeed;
-                    //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
                 }
                 nav.SetDestination(target.transform.position);
-                //break;
             }
             else{   //타겟 없음
                 if(state != State.Patrol){

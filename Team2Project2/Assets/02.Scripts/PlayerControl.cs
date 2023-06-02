@@ -10,7 +10,13 @@ public class PlayerControl : MonoBehaviour
     public float applySpeed {
         get { return playerSpeed; }
         set {
-            playerSpeed = theActionController.isMovingWall ? 0.5f : value;
+            if(theActionController.isMovingWall){
+                playerSpeed = 0.5f;
+                anim.SetFloat("speed", 0.125f);
+            }
+            else{
+                playerSpeed = value;
+            }
         }
     }
 
@@ -81,10 +87,10 @@ public class PlayerControl : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
         anim = lowPolyHuman.GetComponent<Animator>();
+        anim.SetFloat("speed", 1f);
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
-
         playerFov = 0f;
     }
 
@@ -142,6 +148,7 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("isCrouch", false);
             theSoundManager.playerFootstepPlayer.mute = false;
             applySpeed = walkSpeed;
+            anim.SetFloat("speed", 1f);
             applyCrouchPosY = originPosY;
         }
         isCrouchToNav = isCrouch;   //NPC 처리용
@@ -208,12 +215,14 @@ public class PlayerControl : MonoBehaviour
 
         isRun = true;
         applySpeed = runSpeed;
+        anim.SetFloat("speed", runSpeed / walkSpeed);
     }
 
     private void RunningCancel()
     {
         isRun = false;
         applySpeed = walkSpeed;
+        anim.SetFloat("speed", 1f);
     }
 
     private void Move()
