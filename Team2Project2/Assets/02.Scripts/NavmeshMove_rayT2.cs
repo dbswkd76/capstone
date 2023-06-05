@@ -187,10 +187,10 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 Debug.Log("target sitted down");
                 target = null;
             }
-            /*else if(hasTarget && IsTargetCrouch(target.GetComponent<Collider>()) && !IsTargetOnSight(target.transform.position)){   //타겟이 서있고 레이에 없으면
+            else if(hasTarget && IsTargetCrouch(target.GetComponent<Collider>()) && !IsTargetOnSight(target.transform.position)){   //타겟이 서있고 레이에 없으면
                 Debug.Log("target not sitted down, but no ray");
                 target = null;
-            }*/
+            }
 
             if(hasTarget){  //타겟 존재
                 Debug.Log("코루틴 1st");
