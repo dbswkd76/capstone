@@ -20,6 +20,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
     private StatusController target;    //타겟 플레이어
     private PlayerControl targetControl; //타겟 플레이어 모션 상태
     private Animator animator;  //NPC 애니메이터
+    private float animSpeed;
     private SoundManager soundManager; // 사운드 매니저
 
     public Transform attackRoot;    //NPC 접촉 포인트
@@ -88,6 +89,9 @@ public class NavmeshMove_rayT2 : MonoBehaviour
     }*/
     private void Start(){
         soundManager = SoundManager.instance;
+        animSpeed = animator.speed;
+        animator.SetFloat("speed", nav.desiredVelocity.magnitude);
+        Debug.Log("animSpeed: " + animSpeed);
     }
 
     void Update()
@@ -102,7 +106,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
             }
         }
-        animator.SetFloat("speed", nav.desiredVelocity.magnitude);
+        //animator.SetFloat("speed", nav.desiredVelocity.magnitude);
 
         timer += Time.deltaTime;
         if(timer > 10f && !hasTarget){  //시간제한 경과 및 타겟이 없을 때
@@ -118,8 +122,8 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 }
             }
         }
-        //Debug.Log("Not Found Timer: " + timer);
         Debug.Log(state);
+        Debug.Log("ani Speed: " + animator.speed);
         //Debug.Log(hasTarget + ", " + nav.destination);
         //Debug.Log("path " + nav.hasPath + ", To: " + nav.destination);
         /*if(!nav.hasPath){
@@ -193,10 +197,13 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 if(state != State.Tracking){
                     state = State.Tracking;
                     nav.speed = runSpeed;
+                    animator.SetFloat("speed", 2f);
                 }
                 nav.SetDestination(target.transform.position);
+                //break;
             }
             else{   //타겟 없음
+                animator.SetFloat("speed", 1f);
                 if(state != State.Patrol){
                     state = State.Patrol;
                     nav.speed = patrolSpeed;

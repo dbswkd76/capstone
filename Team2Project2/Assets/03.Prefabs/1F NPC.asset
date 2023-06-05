@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 1F NPC
   m_EditorClassIdentifier: 
   attackPower: 35
-  runSpeed: 2
+  runSpeed: 3
   patrolSpeed: 1
   navFloor: 2
