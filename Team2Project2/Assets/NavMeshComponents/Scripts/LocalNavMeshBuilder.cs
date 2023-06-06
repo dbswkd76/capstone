@@ -14,9 +14,12 @@ public class LocalNavMeshBuilder : MonoBehaviour
     // The size of the build bounds
     public Vector3 m_Size = new Vector3(80.0f, 20.0f, 80.0f);
 
-    NavMeshData m_NavMesh;
+    NavMeshData m1_NavMesh;
+    NavMeshData m2_NavMesh;
     AsyncOperation m_Operation;
-    NavMeshDataInstance m_Instance;
+    NavMeshDataInstance m1_Instance;
+    NavMeshDataInstance m2_Instance;
+
     List<NavMeshBuildSource> m_Sources = new List<NavMeshBuildSource>();
 
     IEnumerator Start()
@@ -31,8 +34,11 @@ public class LocalNavMeshBuilder : MonoBehaviour
     void OnEnable()
     {
         // Construct and add navmesh
-        m_NavMesh = new NavMeshData();
-        m_Instance = NavMesh.AddNavMeshData(m_NavMesh);
+        m1_NavMesh = new NavMeshData();
+        m2_NavMesh = new NavMeshData();
+
+        m1_Instance = NavMesh.AddNavMeshData(m1_NavMesh);
+        m2_Instance = NavMesh.AddNavMeshData(m2_NavMesh);
         if (m_Tracked == null)
             m_Tracked = transform;
         UpdateNavMesh(false);
@@ -41,19 +47,24 @@ public class LocalNavMeshBuilder : MonoBehaviour
     void OnDisable()
     {
         // Unload navmesh and clear handle
-        m_Instance.Remove();
+        m1_Instance.Remove();
+        m2_Instance.Remove();
     }
 
     void UpdateNavMesh(bool asyncUpdate = false)
     {
         NavMeshSourceTag.Collect(ref m_Sources);
-        var defaultBuildSettings = NavMesh.GetSettingsByID(0);
+        //var defaultBuildSettings = NavMesh.GetSettingsByIndex(1);//NavMesh.GetSettingsByID(0);
+        var HumanoidBuildSettings = NavMesh.GetSettingsByIndex(0);
+        var CreatureBuildSettings = NavMesh.GetSettingsByIndex(1);
         var bounds = QuantizedBounds();
 
         if (asyncUpdate)
-            m_Operation = NavMeshBuilder.UpdateNavMeshDataAsync(m_NavMesh, defaultBuildSettings, m_Sources, bounds);
+            m_Operation = NavMeshBuilder.UpdateNavMeshDataAsync(m1_NavMesh, HumanoidBuildSettings, m_Sources, bounds);
+            
         else
-            NavMeshBuilder.UpdateNavMeshData(m_NavMesh, defaultBuildSettings, m_Sources, bounds);
+            NavMeshBuilder.UpdateNavMeshData(m1_NavMesh, HumanoidBuildSettings, m_Sources, bounds);
+            NavMeshBuilder.UpdateNavMeshData(m2_NavMesh, CreatureBuildSettings, m_Sources, bounds);
 
         //Debug.Log("update navmesh");
     }
@@ -75,10 +86,10 @@ public class LocalNavMeshBuilder : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        if (m_NavMesh)
+        if (m1_NavMesh)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(m_NavMesh.sourceBounds.center, m_NavMesh.sourceBounds.size);
+            Gizmos.DrawWireCube(m1_NavMesh.sourceBounds.center, m1_NavMesh.sourceBounds.size);
         }
 
         Gizmos.color = Color.yellow;
