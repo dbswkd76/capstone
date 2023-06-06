@@ -15,20 +15,20 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
-    // 마스터 볼륨
-    public float masterVolumeSFX = 1f;
-    public float masterVolumeBGM = 1f;
-
     // 사운드 목록
     public Sound[] bgm = null;
     public Sound[] sfx = null; // 일반 SFX 종합 목록. 아래의 3개 목록 제외.
     public Sound[] sfxZombieScream = null; // 좀비가 걸어다니면서 내는 그로울링 소리 모음
-    public Sound[] sfxZombieMove = null; // 좀비가 걸어다니면서 내는 발소리 모음
     public Sound[] sfxPlayerMove = null; // 플레이어가 걸어다니면서 내는 발소리 모음
+    public Sound[] sfxZombieMove = null; // 좀비가 걸어다니면서 내는 발소리 모음
+    public Sound[] sfxDoctorMove = null; // Doctor가 걸어다니면서 내는 발소리 모음
+    public Sound[] sfxMutantMove = null; // Mutant가 걸어다니면서 내는 발소리 모음
     
     // 재생기 목록
     public AudioSource playerFootstepPlayer = null;
     public AudioSource zombieFootstepPlayer = null;
+    public AudioSource doctorFootstepPlayer = null;
+    public AudioSource mutantFootstepPlayer = null;
     public AudioSource[] bgmPlayer = null;
     public AudioSource[] sfxPlayer = null;
     public AudioSource[] zombieSfxPlayer = null;
@@ -57,17 +57,28 @@ public class SoundManager : MonoBehaviour
     // 좀비와 사람 발소리 재생 - 발소리 종류가 다양해서 별도 분리
     public void PlayFootstep(string name)
     {
-        if(name == "Player")
+        switch (name)
         {
-            playerFootstepPlayer.clip = sfxPlayerMove[Random.Range(0, sfxPlayerMove.Length)].clip;
-            playerFootstepPlayer.Play();
+            case "Player":
+                playerFootstepPlayer.clip = sfxPlayerMove[Random.Range(0, sfxPlayerMove.Length)].clip;
+                playerFootstepPlayer.Play();
+                break;
+            case "Zombie":
+                zombieFootstepPlayer.clip = sfxZombieMove[Random.Range(0, sfxZombieMove.Length)].clip;
+                zombieFootstepPlayer.Play();
+                break;
+            case "Doctor":
+                doctorFootstepPlayer.clip = sfxDoctorMove[Random.Range(0, sfxDoctorMove.Length)].clip;
+                doctorFootstepPlayer.Play();
+                break;
+            case "Mutant":
+                mutantFootstepPlayer.clip = sfxMutantMove[Random.Range(0, sfxMutantMove.Length)].clip;
+                mutantFootstepPlayer.Play();
+                break;
+            default:
+                Debug.Log("존재하지 않는 발소리");
+                break;
         }
-        else if(name == "Zombie")
-        {
-            zombieFootstepPlayer.clip = sfxZombieMove[Random.Range(0, sfxZombieMove.Length)].clip;
-            zombieFootstepPlayer.Play();
-        }
-        else { Debug.Log("존재하지 않는 발소리"); }
     }
 
     // 좀비가 걸어다니면서 내는 그로울링 재생
