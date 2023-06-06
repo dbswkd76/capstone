@@ -16,7 +16,6 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     // 사운드 목록
-    public Sound[] bgm = null;
     public Sound[] sfx = null; // 일반 SFX 종합 목록. 아래의 3개 목록 제외.
     public Sound[] sfxZombieScream = null; // 좀비가 걸어다니면서 내는 그로울링 소리 모음
     public Sound[] sfxPlayerMove = null; // 플레이어가 걸어다니면서 내는 발소리 모음
@@ -29,7 +28,6 @@ public class SoundManager : MonoBehaviour
     public AudioSource zombieFootstepPlayer = null;
     public AudioSource doctorFootstepPlayer = null;
     public AudioSource mutantFootstepPlayer = null;
-    public AudioSource[] bgmPlayer = null;
     public AudioSource[] sfxPlayer = null;
     public AudioSource[] zombieSfxPlayer = null;
 
@@ -46,12 +44,6 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
-
-    private void Start()
-    {
-        instance.PlaySound(bgmPlayer, bgm, "LightBlink");
-        bgmPlayer[0].loop = true;
     }
 
     // 좀비와 사람 발소리 재생 - 발소리 종류가 다양해서 별도 분리

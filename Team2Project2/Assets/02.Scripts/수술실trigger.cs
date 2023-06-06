@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class 수술실trigger : MonoBehaviour
 {
+    /*
     public Flashlight_PRO flashlight;
     private int flashlightopen;
     private int onedeath = 0;
@@ -50,4 +51,5 @@ public class 수술실trigger : MonoBehaviour
 
         }
     }
+    */
 }
