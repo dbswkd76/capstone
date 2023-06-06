@@ -104,7 +104,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
                 soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, this.gameObject.name);
                 BeginAttack();
                 new WaitForSeconds(1f);
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "PlayerHitted");
+                //soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "PlayerHitted");
             }
         }
         //animator.SetFloat("speed", nav.desiredVelocity.magnitude);
@@ -354,11 +354,12 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         //메소드 호출 시 NPC상태 변경, 타겟리스트 추가
         //Debug.Log("call Attack");
         state = State.Attacking;
-        //lhe.helathChangeByNPC(target.health);
+        soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "PlayerHitted");
         lastTargets.Clear();
     }
     private void Attacking(){
         //Debug.Log("attacked by NPC!");
+
         lhe.helathChangeByNPC(target.health);
         lhe.takeDamageByNPC();
         //target.GetComponent<PlayerControl>().isAttackedFov();
