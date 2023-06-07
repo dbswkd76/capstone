@@ -126,7 +126,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         //Debug.Log(state);
         //Debug.Log("ani Speed: " + animator.speed);
         ////Debug.Log(hasTarget + ", " + nav.destination);
-        ////Debug.Log("path " + nav.hasPath + ", To: " + nav.destination);
+        //Debug.Log("path " + nav.hasPath);
         /*if(!nav.hasPath){
             StartCoroutine(UpdatePath());
         }*/
