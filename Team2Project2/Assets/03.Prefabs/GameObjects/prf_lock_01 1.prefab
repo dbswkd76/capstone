@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7173297206326680262}
   m_Layer: 0
-  m_Name: prf_lock_01
+  m_Name: prf_lock_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
