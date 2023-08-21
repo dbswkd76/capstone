@@ -13,7 +13,7 @@ public class NoPwOpencloseDoorL: MonoBehaviour {
     void Start()
     {
         open = false;
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         Player = GameObject.FindWithTag("Player").transform;
         openandclose = GetComponent<Animator>();
 
@@ -53,10 +53,10 @@ public class NoPwOpencloseDoorL: MonoBehaviour {
         switch (this.tag)
         {
             case "Furniture":
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenCupboard");
+                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "OpenCupboard");
                 break;
             case "Door":
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDoor");
+                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "OpenDoor");
                 break;
             default:
                 break;
@@ -68,10 +68,10 @@ public class NoPwOpencloseDoorL: MonoBehaviour {
         switch (this.tag)
         {
             case "Furniture":
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseCupboard");
+                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "CloseCupboard");
                 break;
             case "Door":
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDoor");
+                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "CloseDoor");
                 break;
             default:
                 break;

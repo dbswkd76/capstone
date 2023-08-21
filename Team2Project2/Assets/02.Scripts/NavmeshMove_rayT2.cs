@@ -81,14 +81,14 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         StartCoroutine(UpdatePath());
     }
     /*void Awake(){
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         animator = GetComponent<Animator>();;   //NPC 애니메이터 로드
         nav = GetComponent<NavMeshAgent>(); //NPC 컴포넌트 로드
         attackDistance += nav.radius;
         //nav.speed = patrolSpeed;    //로딩 후 초기 이동속도
     }*/
     private void Start(){
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         animSpeed = animator.speed;
         animator.SetFloat("speed", nav.desiredVelocity.magnitude);
         //Debug.Log("animSpeed: " + animSpeed);
@@ -97,21 +97,21 @@ public class NavmeshMove_rayT2 : MonoBehaviour
     void Update()
     {
         if(hasTarget && state == State.Tracking && Vector3.Distance(target.transform.position, transform.position) <= attackDistance){   //타겟이 있을 때만 동작
-            //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieFindPlayer");
+            //soundManager.PlaySound(soundManager.SfxZombiePlayers, soundManager.SfxBasics, "ZombieFindPlayer");
             if(nav.isStopped == false){
                 //Debug.Log("ready to attack!");
                 Debug.Log(this.gameObject.name);
-                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, this.gameObject.name);
+                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, this.gameObject.name);
                 BeginAttack();
                 new WaitForSeconds(1f);
-                //soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "PlayerHitted");
+                //soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "PlayerHitted");
             }
         }
         //animator.SetFloat("speed", nav.desiredVelocity.magnitude);
 
         timer += Time.deltaTime;
         if(timer > 10f && !hasTarget){  //시간제한 경과 및 타겟이 없을 때
-            //Debug.Log("npc 위치 시간제한 리셋");
+            //Debug.Log("_npc 위치 시간제한 리셋");
             while(true){    //NPC 위치 리셋
                 Vector3 teleportPos = GetRandomPointOnNavMesh(transform.position, 20f, navFloor, NavMesh.AllAreas);
                 Collider[] colliders = Physics.OverlapSphere(teleportPos, viewDistance, targetLayer);
@@ -334,7 +334,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
     }
     private bool IsTargetCrouch(Collider target){
         targetControl = target.GetComponent<PlayerControl>();
-        if(targetControl.isCrouchToNav){ //앉아있으면 false
+        if(targetControl.IsCrouchToNav){ //앉아있으면 false
             return false;
         }
         return true;    //서있으면 true
@@ -346,15 +346,15 @@ public class NavmeshMove_rayT2 : MonoBehaviour
         nav.isStopped = true;
         GameManager.isAttacked = true;
         animator.SetTrigger("attack");
-        //soundManager.PlaySound(soundManager.zombieSfxPlayer, soundManager.sfx, "ZombieAttack");
+        //soundManager.PlaySound(soundManager.SfxZombiePlayers, soundManager.SfxBasics, "ZombieAttack");
         new WaitForSeconds(2f); // 애니메이션 재생과 시간 맞추기
-        //soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "ZombieHitted");
+        //soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "ZombieHitted");
     }
     private void Attack(){
         //메소드 호출 시 NPC상태 변경, 타겟리스트 추가
         //Debug.Log("call Attack");
         state = State.Attacking;
-        soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "PlayerHitted");
+        soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "PlayerHitted");
         lastTargets.Clear();
     }
     private void Attacking(){
@@ -362,7 +362,7 @@ public class NavmeshMove_rayT2 : MonoBehaviour
 
         lhe.helathChangeByNPC(target.health);
         lhe.takeDamageByNPC();
-        //target.GetComponent<PlayerControl>().isAttackedFov();
+        //target.GetComponent<PlayerControl>().IsAttackedFov();
     }
     private void EndAttack(){
         //Debug.Log("call EndAttack");

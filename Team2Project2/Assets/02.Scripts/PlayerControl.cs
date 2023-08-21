@@ -5,96 +5,91 @@ using Kino;
 
 public class PlayerControl : MonoBehaviour
 {
-    // Player Speed - 벽 들고 달리는 현상 방지
-    private float playerSpeed = 0.0f;
-    public float applySpeed {
-        get { return playerSpeed; }
+    private float _playerMovingSpeed = 0.0f; // Player가 움직이는 속도
+    public float ApplySpeed {
+        get { return _playerMovingSpeed; }
         set {
-            if(theActionController.isMovingWall){
-                playerSpeed = 0.5f;
-                anim.SetFloat("speed", 0.125f);
+            if(_actionController.IsMovingWall){ // 벽을 옮기는 중일 때 Player의 속도를 느리게 한다
+                _playerMovingSpeed = 0.5f;
+                _animator.SetFloat("speed", 0.125f);
             }
             else{
-                playerSpeed = value;
+                _playerMovingSpeed = value;
             }
         }
     }
 
     // Speed
     [SerializeField]
-    private float walkSpeed;
+    private float _walkSpeed;
     [SerializeField]
-    private float runSpeed;
+    private float _runSpeed;
     [SerializeField]
-    private float crouchSpeed;
+    private float _crouchSpeed;
 
     // JumpForce
     [SerializeField]
-    private float jumpForece;
+    private float _jumpForece;
 
     // Player State
-    private bool isGround = true;
-    private bool isWalk = false;
-    private bool isRun = false;
-    private bool isCrouch = false;
-    //private bool isInteract 
-    public bool isCrouchToNav;
+    private bool _isGround = true;
+    private bool _isWalk = false;
+    private bool _isRun = false;
+    private bool _isCrouch = false;
+    public bool IsCrouchToNav; // 플레이어가 앉아있는지 NPC에게 알려주는 변수
 
     // Collider
-    private CapsuleCollider capsuleCollider;
+    private CapsuleCollider _capsuleCollider; // 플레이어 외부 충돌 감지
 
     // PosY for Camera
     [SerializeField]
-    private float crouchPosY;
-    private float originPosY;
-    private float applyCrouchPosY; // Now Camera PosY
+    private float _crouchPosY;
+    private float _originPosY;
+    private float _applyCrouchPosY; // Now Camera PosY
 
-    // lookSensitivity for Camera
+    // _cameraRotationSensitivity for Camera
     [SerializeField]
-    private float lookSensitivity;
+    private float _cameraRotationSensitivity; 
 
     // rotationLimit for Camera
     [SerializeField]
-    private float cameraRotationLimit;
-    private float currentCameraRotationX = 0;
+    private float _cameraRotationLimit;
+    private float _currentCameraRotationX = 0;
 
     [SerializeField]
-    private Camera theCamera;
+    private Camera _camera; // 플레이어에 부착된 카메라
     [SerializeField]
-    private ActionController theActionController;
+    private ActionController _actionController;
 
-    private SoundManager theSoundManager;
-    private Rigidbody myRigid;
-    private Animator anim;
-    private GameObject lowPolyHuman;
+    private SoundManager _soundManager;
+    private Rigidbody _rigidbody;
+    private Animator _animator;
+    private GameObject _playerAvata;
 
     //for NPC Zoom in/out effect
-    private Camera playerCamera;
-    private float playerFov;
-    private GameObject npc;
-    private GameObject npcEye;
-    private float turnSmoothVelocity;
-    [Range(0.01f, 2f)] public float turnSmoothTime;
+    private GameObject _npc; // 공격받았을 때 카메라가 zoom in/out할 NPC
+    private GameObject _npcEye; // 공격받았을 때 카메라가 zoom in/out할 NPC의 눈
+    private float _turnSmoothVelocity;
+    [Range(0.01f, 2f)] public float TurnSmoothTime;
 
     //NPC nearby effect
-    public AnalogGlitch glitchEffect;
-    private float intensity = 0.5f;
+    public AnalogGlitch GlitchEffect; // NPC가 가까이 있을 때 화면에 노이즈 효과를 준다
+    private readonly float _glitchIntensity = 0.5f; // 노이즈의 강도
 
     void Start()
     {
-        theSoundManager = SoundManager.instance;
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        myRigid = GetComponent<Rigidbody>();
-        lowPolyHuman = transform.Find("LowPolyHuman").gameObject;
-        anim = lowPolyHuman.GetComponent<Animator>();
-        anim.SetFloat("speed", 1f);
-        applySpeed = walkSpeed;
-        originPosY = theCamera.transform.localPosition.y;
-        applyCrouchPosY = originPosY;
-        playerFov = 0f;
+        _soundManager = SoundManager.Instance;
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _playerAvata = transform.Find("LowPolyHuman").gameObject;
+        _animator = _playerAvata.GetComponent<Animator>();
+        _animator.SetFloat("speed", 1f);
+        ApplySpeed = _walkSpeed;
+        _originPosY = _camera.transform.localPosition.y;
+        _applyCrouchPosY = _originPosY;
     }
 
-    // 0.02초마다 한 번씩 실행
+    // 플레이어의 이동이 프레임마다 불안정하게 움직이는 것을 방지하기 위해 FixedUpdate()에서 이동을 처리한다
     void FixedUpdate()
     {
         if(!GameManager.isAttacked){
@@ -105,22 +100,21 @@ public class PlayerControl : MonoBehaviour
     // Called once per frame
     void Update()
     {   
-        theCamera.fieldOfView = 60f;
+        _camera.fieldOfView = 60f;
         if (GameManager.canPlayerMove)
         {
             IsGround();
             TryJump();
             TryRun();
             TryCrouch();
-            //Move();
-            if (!Inventory.inventoryActivated)
+            if (!Inventory.inventoryActivated) // 인벤토리가 활성화 되어있을 때 카메라가 움직이지 않도록 한다
             {
                 CameraRotation();
                 CharacterRotation();
             }
         }
         else{   //isAttacked
-            isAttackedFov();
+            IsAttackedFov();
         }
     }
    
@@ -132,55 +126,54 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    private void Crouch()
+    private void Crouch() // 앉기
     {
-        isCrouch = !isCrouch;
+        _isCrouch = !_isCrouch;
 
-        if (isCrouch)
+        if (_isCrouch)
         {
-            anim.SetBool("isCrouch", true);
-            theSoundManager.playerFootstepPlayer.mute = true;
-            applySpeed = crouchSpeed;
-            applyCrouchPosY = crouchPosY;
+            _animator.SetBool("isCrouch", true);
+            _soundManager.PlayerFootstepPlayer.mute = true;
+            ApplySpeed = _crouchSpeed;
+            _applyCrouchPosY = _crouchPosY;
         }
         else
         {
-            anim.SetBool("isCrouch", false);
-            theSoundManager.playerFootstepPlayer.mute = false;
-            applySpeed = walkSpeed;
-            anim.SetFloat("speed", 1f);
-            applyCrouchPosY = originPosY;
+            _animator.SetBool("isCrouch", false);
+            _soundManager.PlayerFootstepPlayer.mute = false;
+            ApplySpeed = _walkSpeed;
+            _animator.SetFloat("speed", 1f);
+            _applyCrouchPosY = _originPosY;
         }
-        isCrouchToNav = isCrouch;   //NPC 처리용
-        StartCoroutine(CrouchCoroutine());
+        IsCrouchToNav = _isCrouch;   //NPC 처리용
+        StartCoroutine(CrouchCoroutine()); // 부드럽게 앉고 일어나는 동작 처리
     }
 
-    // For smooth camera movement
-    IEnumerator CrouchCoroutine()
+    IEnumerator CrouchCoroutine() // 부드럽게 앉고 일어나는 동작 처리
     {
-        float _posY = theCamera.transform.localPosition.y;
+        float _posY = _camera.transform.localPosition.y;
         int count = 0;
 
-        while (_posY != applyCrouchPosY)
+        while (_posY != _applyCrouchPosY) // 카메라의 위치를 부드럽게 변경한다.
         {
             count++;
-            _posY = Mathf.Lerp(_posY, applyCrouchPosY, 0.3f);
-            theCamera.transform.localPosition = new Vector3(0, _posY, 0);
+            _posY = Mathf.Lerp(_posY, _applyCrouchPosY, 0.3f);
+            _camera.transform.localPosition = new Vector3(0, _posY, 0);
             if (count > 15)
                 break;
             yield return null;
         }
-        theCamera.transform.localPosition = new Vector3(0, applyCrouchPosY, 0f);
+        _camera.transform.localPosition = new Vector3(0, _applyCrouchPosY, 0f);
     }
 
     private void IsGround()
     {
-        isGround = Physics.Raycast(transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.1f);
+        _isGround = Physics.Raycast(transform.position, Vector3.down, _capsuleCollider.bounds.extents.y + 0.1f);
     }
 
     private void TryJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        if (Input.GetKeyDown(KeyCode.Space) && _isGround)
         {
             Jump();
         }
@@ -188,11 +181,11 @@ public class PlayerControl : MonoBehaviour
 
     private void Jump()
     {
-        if (isCrouch)
+        if (_isCrouch)
             Crouch();
-        anim.SetTrigger("jump");
-        theSoundManager.PlaySound(theSoundManager.sfxPlayer, theSoundManager.sfx, "PlayerJump");
-        myRigid.velocity = transform.up * jumpForece;
+        _animator.SetTrigger("jump");
+        _soundManager.PlaySound(_soundManager.SfxBasicPlayers, _soundManager.SfxBasics, "PlayerJump");
+        _rigidbody.velocity = transform.up * _jumpForece;
     }
 
     private void TryRun()
@@ -210,19 +203,19 @@ public class PlayerControl : MonoBehaviour
 
     private void Running()
     {
-        if (isCrouch)
+        if (_isCrouch)
             Crouch();
 
-        isRun = true;
-        applySpeed = runSpeed;
-        anim.SetFloat("speed", runSpeed / walkSpeed);
+        _isRun = true;
+        ApplySpeed = _runSpeed;
+        _animator.SetFloat("speed", _runSpeed / _walkSpeed);
     }
 
     private void RunningCancel()
     {
-        isRun = false;
-        applySpeed = walkSpeed;
-        anim.SetFloat("speed", 1f);
+        _isRun = false;
+        ApplySpeed = _walkSpeed;
+        _animator.SetFloat("speed", 1f);
     }
 
     private void Move()
@@ -230,73 +223,68 @@ public class PlayerControl : MonoBehaviour
 
         float _moveDirX = Input.GetAxis("Horizontal");
         float _moveDirZ = Input.GetAxis("Vertical");
-        //float _moveDirX = Input.GetAxisRaw("Horizontal");
-        //float _moveDirZ = Input.GetAxisRaw("Vertical");
 
-        isWalk = (_moveDirZ != 0 || _moveDirX != 0) ? true : false;
+        _isWalk = (_moveDirZ != 0 || _moveDirX != 0) ? true : false; // 이동하고 있음을 판별
 
-        anim.SetBool("isWalk", isWalk);
-        anim.SetFloat("horizontal", _moveDirX);
-        anim.SetFloat("vertical", _moveDirZ);
+        _animator.SetBool("isWalk", _isWalk);
+        _animator.SetFloat("horizontal", _moveDirX);
+        _animator.SetFloat("vertical", _moveDirZ);
 
         Vector3 _moveHorizontal = transform.right * _moveDirX;
         Vector3 _moveVertical = transform.forward * _moveDirZ;
 
-        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * applySpeed;
+        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * ApplySpeed;
 
-        //myRigid.velocity = _velocity;
-        myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
+        _rigidbody.MovePosition(transform.position + _velocity * Time.deltaTime);
     }
 
     private void CharacterRotation()
     {
         float _yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
-        myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
+        Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * _cameraRotationSensitivity;
+        _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(_characterRotationY));
     }
 
     private void CameraRotation()
 
     {
         float _xRotation = Input.GetAxisRaw("Mouse Y");
-        float _cameraRotationX = _xRotation * lookSensitivity;
-        currentCameraRotationX -= _cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+        float _cameraRotationX = _xRotation * _cameraRotationSensitivity;
+        _currentCameraRotationX -= _cameraRotationX;
+        _currentCameraRotationX = Mathf.Clamp(_currentCameraRotationX, -_cameraRotationLimit, _cameraRotationLimit);
 
-        theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        _camera.transform.localEulerAngles = new Vector3(_currentCameraRotationX, 0f, 0f);
     }
     
-    public void isAttackedFov(){
+    public void IsAttackedFov(){
         Debug.Log("force to see NPC");
         //GameManager.canPlayerMove = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
         foreach(var colider in colliders){
             if(colider.tag == "NPC"){
-                npc = colider.gameObject;
+                _npc = colider.gameObject;
                 break;
             }
         }
-        Debug.Log("npc name: " + npc.name);
+        Debug.Log("npc name: " + _npc.name);
 
-        npcEye = npc.transform.GetChild(0).gameObject;
-        theCamera.fieldOfView = 30f;
-        var lookRotation = Quaternion.LookRotation(npc.transform.position - transform.position);
+        _npcEye = _npc.transform.GetChild(0).gameObject;
+        _camera.fieldOfView = 30f;
+        var lookRotation = Quaternion.LookRotation(_npc.transform.position - transform.position);
         var targetAngleX = lookRotation.eulerAngles.x;
         var targetAngleY = lookRotation.eulerAngles.y;
-        transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-        //theCamera.transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnSmoothVelocity, turnSmoothTime);
-        //theCamera.transform.eulerAngles = Vector3.one * Mathf.SmoothDampAngle(transform.eulerAngles.x, targetAngleX, ref turnSmoothVelocity, turnSmoothTime);
-        theCamera.transform.LookAt(npcEye.transform);
+        transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref _turnSmoothVelocity, TurnSmoothTime);
+        _camera.transform.LookAt(_npcEye.transform);
     }
     private void OnTriggerStay(Collider collider){
         if(collider.tag == "NPC"){
             Vector3 distance = transform.position - collider.transform.position;
-            glitchEffect.scanLineJitter = intensity / distance.magnitude;
+            GlitchEffect.scanLineJitter = _glitchIntensity / distance.magnitude;
         }
     }
     private void OnTriggerExit(Collider collider){
         if(collider.tag == "NPC"){
-            glitchEffect.scanLineJitter = 0f;
+            GlitchEffect.scanLineJitter = 0f;
         }
     }
 }

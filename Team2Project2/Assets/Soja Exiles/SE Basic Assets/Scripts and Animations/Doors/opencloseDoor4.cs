@@ -18,7 +18,7 @@ public class opencloseDoor4: MonoBehaviour {
     void Start (){
 		open = false;
         previousKeycon = true;
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         Player = GameObject.FindWithTag("Player").transform;
 
 		if (Player == null)
@@ -37,16 +37,16 @@ public class opencloseDoor4: MonoBehaviour {
                     {
                         if (Input.GetMouseButtonDown(0))
                         {
-                            if (IsLockedChange()) soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockOpen");
+                            if (IsLockedChange()) soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "LockOpen");
                             StartCoroutine(opening());
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDoor");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "OpenDoor");
                         }
                     }
                     else if (open == false && keycon.isLocked == true)
                     {
                         if (Input.GetMouseButtonDown(0))
                         {
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockedDoor");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "LockedDoor");
                         }
                     }
                     else if (open == true)
@@ -54,7 +54,7 @@ public class opencloseDoor4: MonoBehaviour {
                         if (Input.GetMouseButtonDown(0))
                         {
                             StartCoroutine(closing());
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDoor");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "CloseDoor");
                         }
                     }
 

@@ -11,7 +11,7 @@ public class LockControl6784 : MonoBehaviour
 
     private void Start()
     {
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         result = new int[]{0,0,0,0};
         correctCombination = new int[] { 6, 7, 8, 4 };
         isOpened = false;
@@ -44,7 +44,7 @@ public class LockControl6784 : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.06f, transform.position.z);
             isOpened = true;
-            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockOpen");
+            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "LockOpen");
         }
     }
 

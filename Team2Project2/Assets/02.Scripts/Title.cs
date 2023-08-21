@@ -13,7 +13,7 @@ public class Title : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        //SoundManager.instance.PlaySound(SoundManager.instance.bgmPlayer, SoundManager.instance.bgm, "Opening");
+        //SoundManager.Instance.PlaySound(SoundManager.Instance.bgmPlayer, SoundManager.Instance.bgm, "Opening");
         
 
     }

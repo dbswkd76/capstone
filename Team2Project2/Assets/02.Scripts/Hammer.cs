@@ -1,37 +1,36 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Hammer : MonoBehaviour
 {
-    public int useCount;
-    private float hammerSpeed = 50f;
+    public int UseCount; // 해머의 최대 사용 횟수
+    private readonly float _hammerMovingSpeed = 50f; // 해머 사용 시 움직이는 동작의 속도
 
-    private Vector3 upPosition = new Vector3(0.005f, 0, 0);
-    private Vector3 downPosition = new Vector3(-0.005f, 0, 0);
+    private Vector3 _upPosition = new(0.005f, 0, 0); // 벽을 들어올릴 때 해머가 움직이는 정도
+    private Vector3 _downPosition = new(-0.005f, 0, 0); // 벽을 놓을 때 해머가 움직이는 정도
 
     private void Start()
     {
-        useCount = 10;
+        UseCount = 10;
     }
 
     public void HammerUP()
     {
-        StartCoroutine(HammerMove(upPosition));
+        StartCoroutine(HammerMove(_upPosition));
     }
 
     public void HammerDown()
     {
-        StartCoroutine(HammerMove(downPosition));
+        StartCoroutine(HammerMove(_downPosition));
     }
 
-    // 벽을 뜯을 때 망치가 조금 올라가고, 내려놓을 때 망치가 조금 내려간다.
+    // 벽을 옮길 때 해머의 위치가 조금 올라가고, 놓을 때 조금 내려간다
     IEnumerator HammerMove(Vector3 dir)
     {
         int count = 5;
         while(count >= 0){
             count--;
-            transform.Translate(hammerSpeed * Time.deltaTime * dir);
+            transform.Translate(_hammerMovingSpeed * Time.deltaTime * dir);
             yield return null;
         }
     }

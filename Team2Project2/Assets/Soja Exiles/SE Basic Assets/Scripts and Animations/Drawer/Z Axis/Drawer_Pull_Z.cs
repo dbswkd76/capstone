@@ -11,7 +11,7 @@ public class Drawer_Pull_Z: MonoBehaviour {
 	private SoundManager soundManager;
 
 	void Start (){
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         open = false;
 		Player = GameObject.FindWithTag("Player").transform;
 	}
@@ -24,13 +24,13 @@ public class Drawer_Pull_Z: MonoBehaviour {
 					if (open == false) {
 						if (Input.GetMouseButtonDown (0)) {
 							StartCoroutine (opening ());
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDrawer");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "OpenDrawer");
                         }
 					} else {
 						if (open == true) {
 							if (Input.GetMouseButtonDown (0)) {
 								StartCoroutine (closing ());
-                                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDrawer");
+                                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "CloseDrawer");
                             }
 						}
 

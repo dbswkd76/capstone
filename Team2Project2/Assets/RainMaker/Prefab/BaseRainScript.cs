@@ -199,7 +199,7 @@ namespace DigitalRuby.RainMaker
                         }
                         else
                         {
-                            // must have RainMistThreshold or higher rain intensity to start seeing mist
+                            // must have RainMistThreshold or higher rain _glitchIntensity to start seeing mist
                             emissionRate = MistEmissionRate();
                         }
                         ParticleSystem.MinMaxCurve rate = e.rateOverTime;

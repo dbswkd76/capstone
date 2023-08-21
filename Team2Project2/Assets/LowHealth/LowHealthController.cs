@@ -158,7 +158,7 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set player health instantly. Any effect that should be visible with this health, will take place immediately.
 		/// </summary>
-		/// <param name="playerHealth">
+		/// <param Name="playerHealth">
 		/// Player new health, value between 0.0 and 1.0. If value is less than 0 or more than 1, value is set to 0 or 1.
 		/// </param>
 		public void SetPlayerHealthInstantly(float playerHealth) {
@@ -173,10 +173,10 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set player health smoothly. All the effects will take place relatively slowly, giving nice transition between health states.
 		/// </summary>
-		/// <param name="playerHealth">
+		/// <param Name="playerHealth">
 		/// Player new health, value between 0.0 and 1.0. If value is less than 0 or more than 1, value is set to 0 or 1.
 		/// </param>
-		/// <param name="seconds">
+		/// <param Name="seconds">
 		/// Seconds how long it takes before all the effects are fully visible.
 		/// </param>
 		public void SetPlayerHealthSmoothly(float playerHealth, float seconds) {

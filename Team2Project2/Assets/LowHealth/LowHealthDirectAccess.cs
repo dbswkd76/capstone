@@ -65,7 +65,7 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set amount of vision loss effect.
 		/// </summary>
-		/// <param name="visionLossEffect">
+		/// <param Name="visionLossEffect">
 		/// Value between 0 and 1 inclusive.
 		/// </param>
 		public void SetVisionLossEffect(float visionLossEffect) {
@@ -76,7 +76,7 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set amount of detail loss effect.
 		/// </summary>
-		/// <param name="detailLossEffect">
+		/// <param Name="detailLossEffect">
 		/// Value between 0 and 1 inclusive.
 		/// </param>
 		public void SetDetailLossEffect(float detailLossEffect) {
@@ -87,10 +87,10 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set amount of color and contrast loss effect.
 		/// </summary>
-		/// <param name="colorLossEffect">
+		/// <param Name="colorLossEffect">
 		/// Value between 0 and 1 inclusive.
 		/// </param>
-		/// <param name="colorLossTowardRed">
+		/// <param Name="colorLossTowardRed">
 		/// Value between 0 and 1 inclusive, 1 being maximum red.
 		/// </param>
 		public void SetColorLossEffect(float colorLossEffect, float colorLossTowardRed) {
@@ -102,7 +102,7 @@ namespace Leguar.LowHealth {
 		/// <summary>
 		/// Set amount of double vision effect.
 		/// </summary>
-		/// <param name="doubleVisionEffect">
+		/// <param Name="doubleVisionEffect">
 		/// Value between 0 and 1 inclusive.
 		/// </param>
 		public void SetDoubleVisionEffect(float doubleVisionEffect) {

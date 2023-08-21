@@ -14,7 +14,7 @@ public class opencloseDoor0247 : MonoBehaviour
     void Start()
 	{
 		open = false;
-        soundManager = SoundManager.instance;
+        soundManager = SoundManager.Instance;
         Player = GameObject.FindWithTag("Player").transform;
 
 		if (Player == null)
@@ -37,7 +37,7 @@ public class opencloseDoor0247 : MonoBehaviour
 						if (Input.GetMouseButtonDown(0))
 						{
 							StartCoroutine(opening());
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "OpenDoor");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "OpenDoor");
                         }
 						
 					}
@@ -45,7 +45,7 @@ public class opencloseDoor0247 : MonoBehaviour
 					{
                         if (Input.GetMouseButtonDown(0))
                         {
-                            soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "LockedDoor");
+                            soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "LockedDoor");
                         }
                     }
 					else
@@ -55,7 +55,7 @@ public class opencloseDoor0247 : MonoBehaviour
 							if (Input.GetMouseButtonDown(0))
 							{
 								StartCoroutine(closing());
-                                soundManager.PlaySound(soundManager.sfxPlayer, soundManager.sfx, "CloseDoor");
+                                soundManager.PlaySound(soundManager.SfxBasicPlayers, soundManager.SfxBasics, "CloseDoor");
                             }
 						}
 
